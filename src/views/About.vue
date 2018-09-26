@@ -1,6 +1,6 @@
 <template>
   <div class="about">
-    <h1>This is an about page</h1>
+    <h1>Test</h1>
     <b-jumbotron bg-variant="danger" text-variant="white" border-variant="dark">
       <template slot="header">
         Functional booty strap
