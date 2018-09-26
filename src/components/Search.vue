@@ -2,7 +2,8 @@
   b-jumbotron(bg-variant="info" text-variant="white" border-variant="dark")
     template(slot="header") Testing
     template(slot="lead")
-      | This is a text that is used to test something. Very interesting!
+      | This is a text that is used to test something. Very interesting! 
+      font-awesome-icon(icon="search")
     hr.my-4
     p It is very nice
 </template>
