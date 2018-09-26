@@ -23,7 +23,7 @@ export default class Search extends Vue {
 
   search() {
     this.axios.get(`http://us-central1-saot-217513.cloudfunctions.net/sentiment-analysis?message=${this.tweet}`).then((response) => {
-      console.log(response.data)
+      console.log(response.data);
     })
   }
 }
