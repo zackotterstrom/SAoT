@@ -51,7 +51,7 @@ export default class Tweets extends Vue {
                               acc.slice(0, val[0]) + acc.slice(val[1]), tweet.full_text
                              ).trim();
 
-    return Object({text: text, hashtags: hashtags, mentions: mentions});
+    return Object({text: text, hashtags: hashtags, mentions: mentions, user: tweet.user.name});
   }
 
 }
