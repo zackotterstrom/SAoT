@@ -1,9 +1,9 @@
 <template>
   <div class="about">
-    <h1>This is an about page</h1>
+    <h1>Test</h1>
     <b-jumbotron bg-variant="danger" text-variant="white" border-variant="dark">
       <template slot="header">
-        Bootstrap Vue
+        Functional booty strap
       </template>
       <template slot="lead">
         This is a simple hero unit, a simple jumbotron-style component for
