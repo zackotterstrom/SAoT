@@ -3,13 +3,14 @@
     Header
     p Hello tweets
     b-form-input#input(type="text" v-model="message")
-    b-btn(@click="search") Search
+    b-btn(@click="search") Search 
+    b-btn(@click="") Check Opinion <!-- feature for seeing the general opinion for all tweets found in a search -->
     b-list-group
-      b-list-group-item(v-for="item in tweets").flex-column.align.items.start
+      b-list-group-item(v-for="node in tweets").flex-column.align.items.start
         .d-flex.w-100.justify-content-between
-          h5.mb-1 List
+          h5.mb-1 {{node['user']}}
           small 3 days ago
-        p.mb-1 {{item}}
+        p.mb-1 {{node['text']}}
 </template>
 
 <script lang="ts">
@@ -23,7 +24,7 @@ import Header from '@/components/Header.vue';
 })
 export default class Tweets extends Vue {
   twitter_endpoint : string = `https://us-central1-saot-217513.cloudfunctions.net/tweets`;
-  count : number = 2;
+  count : number = 5;
   message : string = "";
   tweets : Array<Object> = [];
 
@@ -37,6 +38,13 @@ export default class Tweets extends Vue {
   parse_tweets_json(json : any) {
     return json.statuses.map((e : any) => this.parse_tweet(e));
   }
+
+  read_json(json : any){
+    return JSON.parse(json)
+  }
+
+
+
 
   parse_tweet(tweet : any) {
     if ("retweeted_status" in tweet) {
