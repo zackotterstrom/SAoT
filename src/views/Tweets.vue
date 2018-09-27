@@ -3,7 +3,12 @@
     p Hello tweets
     b-form-input#input(type="text" v-model="message")
     b-btn(@click="search") Search
-    p {{tweets}}
+    b-list-group
+      b-list-group-item(v-for="item in tweets").flex-column.align.items.start
+        .d-flex.w-100.justify-content-between
+          h5.mb-1 List
+          small 3 days ago
+        p.mb-1 {{item}}
 </template>
 
 <script lang="ts">
