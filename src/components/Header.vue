@@ -17,9 +17,8 @@ export default class Header extends Vue {
 };
 </script>
 
-<style lang="scss">
-#header h1 {
-    cursor: pointer;
-    display: inline;
-}
+<style scoped lang="sass">
+#header h1
+    cursor: pointer
+    display: inline
 </style>

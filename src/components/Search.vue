@@ -29,5 +29,5 @@ export default class Search extends Vue {
 }
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="sass">
 </style>
