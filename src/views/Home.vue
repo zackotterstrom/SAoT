@@ -1,5 +1,5 @@
 <template lang="pug">
-  .wrapper
+  .container
     Header
     Search
 </template>
