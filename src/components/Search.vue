@@ -31,8 +31,6 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component
 export default class Search extends Vue {
-  @Prop() private msg!: string;
-
   tweet : string = "Lmao this is some good as text right here";
 
   search() {
