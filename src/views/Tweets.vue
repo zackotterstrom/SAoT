@@ -1,5 +1,6 @@
 <template lang="pug">
   .container
+    Header
     p Hello tweets
     b-form-input#input(type="text" v-model="message")
     b-btn(@click="search") Search
@@ -13,9 +14,12 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import Search from '@/components/Search.vue';
+import Header from '@/components/Header.vue';
 
 @Component({
+  components: {
+    Header
+  },
 })
 export default class Tweets extends Vue {
   twitter_endpoint : string = `https://us-central1-saot-217513.cloudfunctions.net/tweets`;
