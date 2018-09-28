@@ -38,6 +38,29 @@ export default class Search extends Vue {
       console.log(response.data);
     })*/
   }
+  
+  sentimentToText(value) {
+    let txt = "";
+    if (value <= 1 && value > 0.7) {
+        txt = "This is something VERY positive!";
+    } else if (value <= 0.7 && value > 0.3) {
+        txt = "This is positive!";
+    } else if (value <= 0.3 && value > 0) {
+        txt = "This is kinda positive.";
+    } else if (value == 0) {
+        txt = "This is neutral.";
+    } else if (value <= 0 && value > -0.3) {
+        txt = "This is kinda negative.";
+    } else if (value <= -0.3 && value > -0.7) {
+        txt = "This is negative.";
+    } else if (value <= -0.7 && value > -1) {
+        txt = "This is something VERY negative!";
+    } else {
+        txt = "Bot don't know how to calculate this."
+    }
+    return txt;
+  }
+  
   list(){
     
   }
