@@ -1,12 +1,10 @@
 <template lang="pug">
   .container
     Header
-    p Hello tweets
-    b-form-input#input(type="text" v-model="message")
-    b-btn(@click="search") Search 
-    b-btn(@click="") Check Opinion <!-- feature for seeing the general opinion for all tweets found in a search -->
+    b-modal(id="tweetModal" ok-only)
+      | Hello From My Modal!
     b-list-group
-      b-list-group-item(v-for="(node, index) in tweets" :key="index").flex-column.align.items.start
+      b-list-group-item.pointer(v-for="(node, index) in tweets" :key="index" v-b-modal.tweetModal).flex-column.align.items.start
         .d-flex.w-100.justify-content-between
           h5.mb-1 {{node['user']}}
           small 3 days ago
@@ -75,3 +73,9 @@ export default class Tweets extends Vue {
 
 }
 </script>
+
+<style lang="sass" scoped>
+  .pointer
+    cursor: pointer
+</style>
+
