@@ -1,14 +1,25 @@
 <template lang="pug">
-  .container
-    b-jumbotron(bg-variant="info" text-variant="white" border-variant="dark")
-      template(slot="header") Testing
+  .wrapper
+    b-jumbotron(bg-variant="light" text-variant="dark")
+      template(slot="header") Search for tweet
       template(slot="lead")
-        | This is a text that is used to test something. Very interesting! 
-        font-awesome-icon(icon="coffee")
+       b-input-group(size="lg" class="mb-3" :prepend="search_method")
+          b-form-input(type="text" v-model="query")
+          b-form-input(type="number" min="0" placeholder="Tweet count" v-model="count")
+          b-input-group-append
+            b-btn(size="sm" variant="success" @click="search")
+              font-awesome-icon(icon="search")
+      b-form-group(label="Search method")
+        b-form-radio-group(id="btnradios2"
+                        buttons
+                        button-variant="outline-dark"
+                        size="lg"
+                        v-model="search_method"
+                        name="method")
+          b-form-radio(value="message") Keyword
+          b-form-radio(value="from") From user        
       hr.my-4
-      p It is very nice
-    b-form-input#input(type="text" v-model="tweet")
-    b-btn(@click="search") Search
+      b-btn(variant="link") Advanced search
 </template>
 
 
@@ -17,38 +28,48 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component
 export default class Search extends Vue {
-  @Prop() private msg!: string;
-
-  tweet : string = "";
+  count : string = "";
+  query : string = "";
+  search_method : string = "message"
 
   search() {
-    this.axios.get(`http://us-central1-saot-217513.cloudfunctions.net/sentiment-analysis?message=${this.tweet}`).then((response) => {
-      let value = response.data.split(" ");
-      value = value[2];
-      value = parseFloat(value);
-      console.log(value);
-      let txt = "";
-      if (value <= 1 && value > 0.7) {
-          txt = "This is something VERY positive!";
-      } else if (value <= 0.7 && value > 0.3) {
-          txt = "This is positive!";
-      } else if (value <= 0.3 && value > 0) {
-          txt = "This is kinda positive.";
-      } else if (value == 0) {
-          txt = "This is neutral.";
-      } else if (value <= 0 && value > -0.3) {
-          txt = "This is kinda negative.";
-      } else if (value <= -0.3 && value > -0.7) {
-          txt = "This is negative.";
-      } else if (value <= -0.7 && value > -1) {
-          txt = "This is something VERY negative!";
-      } else {
-          txt = "Bot don't know how to calculate this."
-      }
-    })
+    this.$router.push({ name: 'tweets', params: { query: `?${this.search_method}=${this.query}&count=${this.count}` }}) 
+    /*this.axios.get(`http://us-central1-saot-217513.cloudfunctions.net/sentiment-analysis?message=${this.tweet}`).then((response) => {
+      console.log(response.data);
+    })*/
+  }
+  
+  sentimentToText(value) {
+    let txt = "";
+    if (value <= 1 && value > 0.7) {
+        txt = "This is something VERY positive!";
+    } else if (value <= 0.7 && value > 0.3) {
+        txt = "This is positive!";
+    } else if (value <= 0.3 && value > 0) {
+        txt = "This is kinda positive.";
+    } else if (value == 0) {
+        txt = "This is neutral.";
+    } else if (value <= 0 && value > -0.3) {
+        txt = "This is kinda negative.";
+    } else if (value <= -0.3 && value > -0.7) {
+        txt = "This is negative.";
+    } else if (value <= -0.7 && value > -1) {
+        txt = "This is something VERY negative!";
+    } else {
+        txt = "Bot don't know how to calculate this."
+    }
+    return txt;
+  }
+  
+  list(){
+    
   }
 }
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="sass">
+  #down
+    margin-top: 40px
+    p
+      text-align: left
 </style>
