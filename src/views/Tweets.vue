@@ -24,7 +24,7 @@ import Header from '@/components/Header.vue';
 })
 export default class Tweets extends Vue {
   twitter_endpoint : string = `https://us-central1-saot-217513.cloudfunctions.net/tweets`;
-  count : number = 5;
+  count : number = 100;
   message : string = "";
   tweets : Array<Object> = [];
 
