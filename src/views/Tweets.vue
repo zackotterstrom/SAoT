@@ -1,15 +1,14 @@
 <template lang="pug">
   .container
     Header
-    p Hello tweets
     b-form-input#input(type="text" v-model="message")
     b-btn(@click="search") Search 
-    b-btn(@click="") Check Opinion <!-- feature for seeing the general opinion for all tweets found in a search -->
+    b-btn(@click="mention_counter(0)") Check Opinion <!-- feature for seeing the general opinion for all tweets found in a search -->
     b-list-group
       b-list-group-item(v-for="(node, index) in tweets" :key="index").flex-column.align.items.start
         .d-flex.w-100.justify-content-between
           h5.mb-1 {{node['user']}}
-          small 3 days ago
+          small mentions: {{node.mentions.length}}
         p.mb-1 {{node['text']}}
 </template>
 
@@ -44,9 +43,6 @@ export default class Tweets extends Vue {
   read_json(json : any){
     return JSON.parse(json)
   }
-
-
-
 
   parse_tweet(tweet : any) {
     if ("retweeted_status" in tweet) {
