@@ -1,7 +1,7 @@
 <template lang="pug">
     b-jumbotron#header.text-center(
-        bg-variant="info"
-        text-variant="light"
+        bg-variant="light"
+        text-variant="dark"
     )
         h1(@click="goHome") SAoT
 </template>

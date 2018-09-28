@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Watch } from 'vue-property-decorator';
 import Header from '@/components/Header.vue';
 
 @Component({
@@ -24,12 +24,14 @@ import Header from '@/components/Header.vue';
 })
 export default class Tweets extends Vue {
   twitter_endpoint : string = `https://us-central1-saot-217513.cloudfunctions.net/tweets`;
-  count : number = 100;
-  message : string = "";
   tweets : Array<Object> = [];
 
-  search() {
-    this.axios.get(`${this.twitter_endpoint}?message=${this.message}&count=${this.count}`).then((response) => {
+  created () {
+    this.search(this.$route.params.query);
+  }
+
+  search(query : string) {
+    this.axios.get(`${this.twitter_endpoint}${query}`).then((response) => {
       console.log(response.data);
       this.tweets = this.parse_tweets_json(response.data);
     })
