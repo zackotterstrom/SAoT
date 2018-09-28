@@ -4,4 +4,6 @@
 </template>
 
 <style lang="sass">
+  #app
+    background-color: #333
 </style>
