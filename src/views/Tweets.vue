@@ -2,9 +2,9 @@
   .container
     Header
     b-modal(id="tweetModal" ok-only)
-      | Hello From My Modal!
+      | {{selected.text}}
     b-list-group
-      b-list-group-item.pointer(v-for="(node, index) in tweets" :key="index" v-b-modal.tweetModal).flex-column.align.items.start
+      b-list-group-item.pointer(v-for="(node, index) in tweets" :key="index" @click="show_tweet(node)").flex-column.align.items.start
         .d-flex.w-100.justify-content-between
           h5.mb-1 {{node['user']}}
           small 3 days ago
@@ -23,6 +23,7 @@ import Header from '@/components/Header.vue';
 export default class Tweets extends Vue {
   twitter_endpoint : string = `https://us-central1-saot-217513.cloudfunctions.net/tweets`;
   tweets : Array<Object> = [];
+  selected = {};
 
   created () {
     this.search(this.$route.params.query);
@@ -43,7 +44,10 @@ export default class Tweets extends Vue {
     return JSON.parse(json)
   }
 
-
+  show_tweet(tweet : any) {
+    this.selected = tweet;
+    this.$root.$emit('bv::show::modal','tweetModal')
+  }
 
 
   parse_tweet(tweet : any) {
