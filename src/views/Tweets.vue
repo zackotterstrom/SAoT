@@ -6,7 +6,7 @@
     b-btn(@click="search") Search 
     b-btn(@click="") Check Opinion <!-- feature for seeing the general opinion for all tweets found in a search -->
     b-list-group
-      b-list-group-item(v-for="node in tweets").flex-column.align.items.start
+      b-list-group-item(v-for="(node, index) in tweets" :key="index").flex-column.align.items.start
         .d-flex.w-100.justify-content-between
           h5.mb-1 {{node['user']}}
           small 3 days ago
