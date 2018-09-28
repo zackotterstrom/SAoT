@@ -3,6 +3,11 @@
     Header
     b-modal(id="tweetModal" ok-only)
       | {{selected.text}}
+      br
+      strong {{sentiment}}
+      br
+      strong {{category}}
+
     b-list-group
       b-list-group-item.pointer(v-for="(node, index) in tweets" :key="index" @click="show_tweet(node)").flex-column.align.items.start
         .d-flex.w-100.justify-content-between
@@ -24,6 +29,8 @@ export default class Tweets extends Vue {
   twitter_endpoint : string = `https://us-central1-saot-217513.cloudfunctions.net/tweets`;
   tweets : Array<Object> = [];
   selected = {};
+  sentiment = "";
+  category = "";
 
   created () {
     this.search(this.$route.params.query);
@@ -46,7 +53,13 @@ export default class Tweets extends Vue {
 
   show_tweet(tweet : any) {
     this.selected = tweet;
-    this.$root.$emit('bv::show::modal','tweetModal')
+    this.$root.$emit('bv::show::modal','tweetModal');
+    this.axios.get(`http://us-central1-saot-217513.cloudfunctions.net/sentiment-analysis?message=${tweet.text}&type=sentiment`).then((response) => {
+      this.sentiment = response.data;
+    });
+    this.axios.get(`http://us-central1-saot-217513.cloudfunctions.net/sentiment-analysis?message=${tweet.text}&type=category`).then((response) => {
+      this.category = response.data;
+    });
   }
 
 
