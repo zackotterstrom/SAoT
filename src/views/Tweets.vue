@@ -12,7 +12,7 @@
       b-list-group-item.pointer(v-for="(node, index) in tweets" :key="index" @click="show_tweet(node)").flex-column.align.items.start
         .d-flex.w-100.justify-content-between
           h5.mb-1 {{node['user']}}
-          small 3 days ago
+          small mentions: {{node.mentions.length}}
         p.mb-1 {{node['text']}}
 </template>
 
@@ -111,4 +111,3 @@ export default class Tweets extends Vue {
   .pointer
     cursor: pointer
 </style>
-
