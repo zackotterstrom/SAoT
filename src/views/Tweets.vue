@@ -4,9 +4,9 @@
     b-modal(id="tweetModal" ok-only)
       | {{selected.text}}
       br
-      strong {{sentiment}}
+      strong {{analysis.sentiment}}
       br
-      strong {{category}}
+      strong {{analysis.category}}
 
     b-list-group
       b-list-group-item.pointer(v-for="(node, index) in tweets" :key="index" @click="show_tweet(node)").flex-column.align.items.start
@@ -27,10 +27,19 @@ import Header from '@/components/Header.vue';
 })
 export default class Tweets extends Vue {
   twitter_endpoint : string = `https://us-central1-saot-217513.cloudfunctions.net/tweets`;
+  analysis_endpoint : string = `http://us-central1-saot-217513.cloudfunctions.net/sentiment-analysis`;
+
+  // Array of tweets fetched from twitter containg text, user, mentions and hashtags.
   tweets : Array<Object> = [];
+
+  // This is used to display the selected tweet in the popup when clicking on tweets
   selected = {};
-  sentiment = "";
-  category = "";
+
+  // Displayed when waiting for analysis.
+  loading_text = "Loading...";
+
+  // This is used to display the semantic analysis of the selected tweet.
+  analysis : any = { sentiment : "", category : "" };
 
   created () {
     this.search(this.$route.params.query);
@@ -38,7 +47,6 @@ export default class Tweets extends Vue {
 
   search(query : string) {
     this.axios.get(`${this.twitter_endpoint}${query}`).then((response) => {
-      console.log(response.data);
       this.tweets = this.parse_tweets_json(response.data);
     })
   }
@@ -53,15 +61,23 @@ export default class Tweets extends Vue {
 
   show_tweet(tweet : any) {
     this.selected = tweet;
+
+    this.analysis.sentiment = this.loading_text;
+    this.analysis.category = this.loading_text;
+
+    this.analyse(tweet.text, "sentiment");
+    this.analyse(tweet.text, "category");
+
     this.$root.$emit('bv::show::modal','tweetModal');
-    this.axios.get(`http://us-central1-saot-217513.cloudfunctions.net/sentiment-analysis?message=${tweet.text}&type=sentiment`).then((response) => {
-      this.sentiment = response.data;
-    });
-    this.axios.get(`http://us-central1-saot-217513.cloudfunctions.net/sentiment-analysis?message=${tweet.text}&type=category`).then((response) => {
-      this.category = response.data;
-    });
   }
 
+  analyse(tweet : string, type : string) {
+    this.axios.get(`${this.analysis_endpoint}?message=${tweet}&type=${type}`).then((resp) => {
+      this.analysis[type] = resp.data;
+    }).catch((reason) => {
+      this.analysis[type] = reason.response.data.details;
+    });
+  }
 
   parse_tweet(tweet : any) {
     if ("retweeted_status" in tweet) {
