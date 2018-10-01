@@ -1,6 +1,13 @@
 <template lang="pug">
   .container
-    button(@click="mergeTweets") CLICK THE DEBUG
+    b-jumbotron
+      h1 Semantic Summary
+      p Overall positivity: {{Math.round(generic_analysis.sentiment.score * 10) / 10}} ({{sentimentToText(generic_analysis.sentiment)}})
+      p Overall emotion: {{Math.round(generic_analysis.sentiment.magnitude * 10) / 10}}
+      p Overall categories:
+      ul(v-if="generic_analysis.category instanceof Array" v-for="(category, index) in generic_analysis.category" :key="index")
+        li {{category.name}}
+      p Most meaningful word(s) overall: {{keyword(generic_analysis.entities).name}}
     LoadingIcon(v-if="!done")
     b-modal(id="tweetModal" title="Tweet details" ok-only)
             p(v-html="textWithKeyword(selected.text)")
@@ -45,6 +52,9 @@ export default class Tweets extends Vue {
   // This is used to display the semantic analysis of the selected tweet.
   analysis : any = { sentiment : {}, category : {}, entities : {} };
 
+  // This is used to display generic analysis about all tweets.
+  generic_analysis : any = { sentiment : {}, category : {}, entities : {} };
+
   created () {
     if (!this.$route.params.query) {
       this.$router.push("/");
@@ -56,6 +66,7 @@ export default class Tweets extends Vue {
   search(query : string) {
     this.axios.get(`${this.twitter_endpoint}${query}`).then((response) => {
       this.tweets = this.parse_tweets_json(response.data);
+      this.analyseAllTweets();
     })
   }
 
@@ -74,28 +85,26 @@ export default class Tweets extends Vue {
     this.analysis.category = this.loading_text;
     this.analysis.entities = this.loading_text;
 
-    this.analyse(tweet.text, "sentiment");
-    this.analyse(tweet.text, "category");
-    this.analyse(tweet.text, "entities");
+    this.analyse(tweet.text, "sentiment", this.analysis);
+    this.analyse(tweet.text, "category", this.analysis);
+    this.analyse(tweet.text, "entities", this.analysis);
 
     this.$root.$emit('bv::show::modal','tweetModal');
   }
 
-  analyse(tweet : string, type : string) {
+  analyse(tweet : string, type : string, analysis : any) {
     this.axios.get(`${this.analysis_endpoint}?message=${tweet}&type=${type}`).then((resp) => {
-      this.analysis[type] = resp.data;
+      analysis[type] = resp.data;
     }).catch((reason) => {
-      this.analysis[type] = reason.response.data.details;
+      analysis[type] = reason.response.data.details;
     });
   }
 
-  mergeTweets(){
-    let map = ""
-    console.log(this.tweets.length)
-    map += (this.tweets.map((text : any) => text.text)+" ")
-    console.log(map)
-    this.analyse(map,map)
-    console.log(this.analysis)
+  analyseAllTweets(){
+    let map = (this.tweets.map((text : any) => text.text)+" ");
+    this.analyse(map, "sentiment", this.generic_analysis);
+    this.analyse(map, "category", this.generic_analysis);
+    this.analyse(map, "entities", this.generic_analysis);
   }
 
   textWithKeyword(text : any) {
@@ -116,6 +125,7 @@ export default class Tweets extends Vue {
   }
 
   sentimentToText(value : any) {
+    if (value == undefined) return "";
     let txt = "";
     value = value.score;
 
@@ -140,7 +150,9 @@ export default class Tweets extends Vue {
   }
 
   parse_tweet(tweet : any) {
+    let suffix = "";
     if ("retweeted_status" in tweet) {
+      suffix = ` 🔄 ${tweet.user.name}`;
       tweet = tweet.retweeted_status;
     }
 
@@ -163,7 +175,7 @@ export default class Tweets extends Vue {
 
     this.done = true;
 
-    return Object({text: text, hashtags: hashtags, mentions: mentions, user: tweet.user.name});
+    return Object({text: text, hashtags: hashtags, mentions: mentions, user: tweet.user.name + suffix});
   }
 }
 </script>
