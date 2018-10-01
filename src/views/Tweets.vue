@@ -1,6 +1,5 @@
 <template lang="pug">
   .container
-    Header
     LoadingIcon(v-if="!done")
     b-modal(id="tweetModal" ok-only)
             | {{selected.text}}
@@ -15,13 +14,11 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import Header from '@/components/Header.vue';
 import LoadingIcon from '@/components/LoadingIcon.vue';
 import TweetList from '@/components/TweetList.vue';
 
 @Component({
   components: {
-    Header,
     LoadingIcon,
     TweetList
   }
