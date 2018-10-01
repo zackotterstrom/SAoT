@@ -39,7 +39,7 @@ export default class Search extends Vue {
     })*/
   }
   
-  sentimentToText(value) {
+  sentimentToText(value : any) {
     let txt = "";
     if (value <= 1 && value > 0.7) {
         txt = "This is something VERY positive!";

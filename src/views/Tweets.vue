@@ -1,9 +1,7 @@
 <template lang="pug">
   .container
     Header
-    b-form-input#input(type="text" v-model="message")
-    b-btn(@click="search") Search 
-    b-btn(@click="") Check Opinion <!-- feature for seeing the general opinion for all tweets found in a search -->
+    button(@click="mergeTweets()") LOL
     b-list-group
       b-list-group-item(v-for="(node, index) in tweets" :key="index").flex-column.align.items.start
         .d-flex.w-100.justify-content-between
@@ -15,6 +13,7 @@
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import Header from '@/components/Header.vue';
+import Search from '@/components/Search.vue';
 
 @Component({
   components: {
@@ -27,6 +26,14 @@ export default class Tweets extends Vue {
 
   created () {
     this.search(this.$route.params.query);
+  }
+
+  mergeTweets(){
+    let map = ""
+    console.log(this.tweets.length)
+    map += (this.tweets.map(text => text.text)+" ")
+    console.log(map)
+    
   }
 
   search(query : string) {
