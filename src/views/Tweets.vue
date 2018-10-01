@@ -1,12 +1,15 @@
 <template lang="pug">
   .container
     LoadingIcon(v-if="!done")
-    b-modal(id="tweetModal" ok-only)
-            | {{selected.text}}
+    b-modal(id="tweetModal" title="Tweet details" ok-only)
+            p(v-html="textWithKeyword(selected.text)")
             br
-            strong {{sentimentToText(analysis.sentiment)}}
+            strong {{sentimentToText(analysis.sentiment)}} ({{Math.round(analysis.sentiment.score * 10) / 10}})
             br
-            strong {{analysis.category}}
+            br
+            strong Categories:
+            ul(v-if="analysis.category instanceof Array" v-for="(category, index) in analysis.category" :key="index")
+              li {{category.name}}
     TweetList(:tweets="tweets"
               v-if="done"
               @show-tweet="show_tweet")
@@ -39,7 +42,7 @@ export default class Tweets extends Vue {
   loading_text = "Loading...";
 
   // This is used to display the semantic analysis of the selected tweet.
-  analysis : any = { sentiment : {}, category : {} };
+  analysis : any = { sentiment : {}, category : {}, entities : {} };
 
   created () {
     if (!this.$route.params.query) {
@@ -68,9 +71,11 @@ export default class Tweets extends Vue {
 
     this.analysis.sentiment = this.loading_text;
     this.analysis.category = this.loading_text;
+    this.analysis.entities = this.loading_text;
 
     this.analyse(tweet.text, "sentiment");
     this.analyse(tweet.text, "category");
+    this.analyse(tweet.text, "entities");
 
     this.$root.$emit('bv::show::modal','tweetModal');
   }
@@ -83,13 +88,27 @@ export default class Tweets extends Vue {
     });
   }
 
+  textWithKeyword(text : any) {
+    if (text == undefined) return "";
+    let keyword = this.keyword(this.analysis.entities);
+    if (keyword == "") return "";
+
+    return text.replace(new RegExp(keyword.name, "gi"), (match : string) => {
+      return `<u v-b-tooltip.hover title="Importance: ${Math.round(keyword.salience * 10) / 10}" class="text-danger">${match}</u>`;
+    });
+  }
+
+  keyword(value : any) {
+    if (value instanceof Array) {
+      return JSON.parse(JSON.stringify(value)).sort((a : any, b : any) => b.salience - a.salience)[0];
+    }
+    return "";
+  }
+
   sentimentToText(value : any) {
-    //if (!value.include("score")) return value;
     let txt = "";
-    //console.log(value);
     value = value.score;
-    //console.log(value);
-    
+
     if (value <= 1 && value > 0.7) {
         txt = "This is something VERY positive!";
     } else if (value <= 0.7 && value > 0.3) {
@@ -112,7 +131,7 @@ export default class Tweets extends Vue {
 
   parse_tweet(tweet : any) {
     if ("retweeted_status" in tweet) {
-    tweet = tweet.retweeted_status;
+      tweet = tweet.retweeted_status;
     }
 
     let hashtags = tweet.entities.hashtags.map((m : any) => m.text);
@@ -124,13 +143,13 @@ export default class Tweets extends Vue {
     tweet.entities.urls.forEach((m : any) => indices.push(m.indices));
 
     if ("extended_entities" in tweet) {
-    tweet.extended_entities.media.forEach((m : any) => indices.push(m.indices));
+      tweet.extended_entities.media.forEach((m : any) => indices.push(m.indices));
     }
 
     let text = indices.sort((a : number[], b : number[]) => b[0] - a[0])
-                    .reduce((acc : string, val) =>
-                            acc.slice(0, val[0]) + acc.slice(val[1]), tweet.full_text
-                            ).trim();
+                      .reduce((acc : string, val) =>
+                              acc.slice(0, val[0]) + acc.slice(val[1]), tweet.full_text
+                             ).trim();
 
     this.done = true;
 
