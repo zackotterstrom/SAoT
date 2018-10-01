@@ -5,7 +5,7 @@
     b-modal(id="tweetModal" ok-only)
             | {{selected.text}}
             br
-            strong {{analysis.sentiment}}
+            strong {{sentimentToText(analysis.sentiment)}}
             br
             strong {{analysis.category}}
     TweetList(:tweets="tweets"
@@ -42,7 +42,7 @@ export default class Tweets extends Vue {
   loading_text = "Loading...";
 
   // This is used to display the semantic analysis of the selected tweet.
-  analysis : any = { sentiment : "", category : "" };
+  analysis : any = { sentiment : {}, category : {} };
 
   created () {
     if (!this.$route.params.query) {
@@ -84,6 +84,33 @@ export default class Tweets extends Vue {
     }).catch((reason) => {
       this.analysis[type] = reason.response.data.details;
     });
+  }
+
+  sentimentToText(value : any) {
+    //if (!value.include("score")) return value;
+    let txt = "";
+    //console.log(value);
+    value = value.score;
+    //console.log(value);
+    
+    if (value <= 1 && value > 0.7) {
+        txt = "This is something VERY positive!";
+    } else if (value <= 0.7 && value > 0.3) {
+        txt = "This is positive!";
+    } else if (value <= 0.3 && value > 0) {
+        txt = "This is kinda positive.";
+    } else if (value == 0) {
+        txt = "This is neutral.";
+    } else if (value <= 0 && value > -0.3) {
+        txt = "This is kinda negative.";
+    } else if (value <= -0.3 && value > -0.7) {
+        txt = "This is negative.";
+    } else if (value <= -0.7 && value > -1) {
+        txt = "This is something VERY negative!";
+    } else {
+        txt = value
+    }
+    return txt;
   }
 
   parse_tweet(tweet : any) {

@@ -1,50 +1,3 @@
-<<<<<<< HEAD
-<template lang="pug">
-  b-jumbotron(bg-variant="light" text-variant="dark")
-    template(slot="header") Search for tweet
-    template(slot="lead")
-      b-input-group(size="lg" class="mb-3" :prepend="search_method")
-        b-form-input(type="text" v-model="query")
-        b-form-input(type="number" min="0" placeholder="Tweet count" v-model="count")
-        b-input-group-append
-          b-btn(size="sm" variant="success" @click="search")
-            font-awesome-icon(icon="search")
-    b-form-group(label="Search method")
-      b-form-radio-group(id="btnradios2"
-                      buttons
-                      button-variant="outline-dark"
-                      size="lg"
-                      v-model="search_method"
-                      name="method")
-        b-form-radio(value="message") Keyword
-        b-form-radio(value="from") From user        
-    hr.my-4
-    b-btn#link(variant="link") Advanced search
-</template>
-
-
-<script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-
-@Component
-export default class Search extends Vue {
-  count : string = "";
-  query : string = "";
-  search_method : string = "message"
-
-  search() {
-    this.$router.push({ name: 'tweets', params: { query: `?${this.search_method}=${this.query}&count=${this.count}` }});
-  }
-}
-</script>
-
-<style scoped lang="sass">
-  #down
-    margin-top: 40px
-  p
-    text-align: left
-</style>
-=======
 <template lang="pug">
   .wrapper
     b-jumbotron(bg-variant="light" text-variant="dark")
@@ -86,28 +39,6 @@ export default class Search extends Vue {
     })*/
   }
   
-  sentimentToText() {
-    let value = 0;
-    let txt = "";
-    if (value <= 1 && value > 0.7) {
-        txt = "This is something VERY positive!";
-    } else if (value <= 0.7 && value > 0.3) {
-        txt = "This is positive!";
-    } else if (value <= 0.3 && value > 0) {
-        txt = "This is kinda positive.";
-    } else if (value == 0) {
-        txt = "This is neutral.";
-    } else if (value <= 0 && value > -0.3) {
-        txt = "This is kinda negative.";
-    } else if (value <= -0.3 && value > -0.7) {
-        txt = "This is negative.";
-    } else if (value <= -0.7 && value > -1) {
-        txt = "This is something VERY negative!";
-    } else {
-        txt = "Bot don't know how to calculate this."
-    }
-    return txt;
-  }
   
   list(){
     
@@ -121,4 +52,3 @@ export default class Search extends Vue {
     p
       text-align: left
 </style>
->>>>>>> 7cd2a0331f4de0b9be91c91121be230b4fff2005
