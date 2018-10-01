@@ -1,33 +1,35 @@
 <template lang="pug">
   .container
     Header
-    p Hello tweets
-    b-form-input#input(type="text" v-model="message")
-    b-btn(@click="search") Search 
-    b-btn(@click="") Check Opinion <!-- feature for seeing the general opinion for all tweets found in a search -->
-    b-list-group
-      b-list-group-item(v-for="(node, index) in tweets" :key="index").flex-column.align.items.start
-        .d-flex.w-100.justify-content-between
-          h5.mb-1 {{node['user']}}
-          small 3 days ago
-        p.mb-1 {{node['text']}}
+    LoadingIcon(v-if="!done")
+    TweetList(:tweets="tweets" v-if="done")
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
 import Header from '@/components/Header.vue';
+import LoadingIcon from '@/components/LoadingIcon.vue';
+import TweetList from '@/components/TweetList.vue';
 
 @Component({
   components: {
-    Header
-  },
+    Header,
+    LoadingIcon,
+    TweetList
+  }
 })
+
 export default class Tweets extends Vue {
   twitter_endpoint : string = `https://us-central1-saot-217513.cloudfunctions.net/tweets`;
   tweets : Array<Object> = [];
+  done : boolean = false;
 
   created () {
-    this.search(this.$route.params.query);
+    if (!this.$route.params.query) {
+      this.$router.push("/");
+    } else {
+      this.search(this.$route.params.query);
+    };
   }
 
   search(query : string) {
@@ -45,12 +47,9 @@ export default class Tweets extends Vue {
     return JSON.parse(json)
   }
 
-
-
-
   parse_tweet(tweet : any) {
     if ("retweeted_status" in tweet) {
-      tweet = tweet.retweeted_status;
+    tweet = tweet.retweeted_status;
     }
 
     let hashtags = tweet.entities.hashtags.map((m : any) => m.text);
@@ -62,16 +61,18 @@ export default class Tweets extends Vue {
     tweet.entities.urls.forEach((m : any) => indices.push(m.indices));
 
     if ("extended_entities" in tweet) {
-      tweet.extended_entities.media.forEach((m : any) => indices.push(m.indices));
+    tweet.extended_entities.media.forEach((m : any) => indices.push(m.indices));
     }
 
     let text = indices.sort((a : number[], b : number[]) => b[0] - a[0])
-                      .reduce((acc : string, val) =>
-                              acc.slice(0, val[0]) + acc.slice(val[1]), tweet.full_text
-                             ).trim();
+                    .reduce((acc : string, val) =>
+                            acc.slice(0, val[0]) + acc.slice(val[1]), tweet.full_text
+                            ).trim();
+
+    this.done = true;
 
     return Object({text: text, hashtags: hashtags, mentions: mentions, user: tweet.user.name});
   }
-
 }
 </script>
+
