@@ -1,6 +1,5 @@
 <template lang="pug">
     b-jumbotron
-
         b-list-group
             b-list-group-item.pointer(v-for="(node, index) in tweets" :key="index" @click="show_tweet(node)").flex-column.align.items.start
                 .d-flex.w-100.justify-content-between
