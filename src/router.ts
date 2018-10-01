@@ -13,6 +13,11 @@ export default new Router({
       component: () => import('./views/Home.vue')
     },
     {
+      path: '/search-advanced',
+      name: 'search_advanced',
+      component: () => import('./views/SearchAdvanced.vue')
+    },
+    {
       path: '/tweets',
       name: 'tweets',
       component: () => import('./views/Tweets.vue')
