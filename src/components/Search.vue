@@ -2,9 +2,9 @@
   b-jumbotron(bg-variant="light" text-variant="dark")
     template(slot="header") Search for tweet
     template(slot="lead")
-      b-input-group(size="lg" class="mb-3" :prepend="search_method")
-        b-form-input(type="text" v-model="query")
-        b-form-input(type="number" min="0" placeholder="Tweet count" v-model="count")
+      b-input-group(size="lg" class="mb-3" :prepend="search_method" @keyup.enter="search")
+        b-form-input(type="text" v-model="query" value="Trump")
+        b-form-input(type="number" min="1" max="100" placeholder="Tweet count" v-model="count" value="10")
         b-input-group-append
           b-btn(size="sm" variant="success" @click="search")
             font-awesome-icon(icon="search")
