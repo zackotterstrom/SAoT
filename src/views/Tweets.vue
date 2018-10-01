@@ -1,13 +1,8 @@
 <template lang="pug">
   .container
-    b-jumbotron
-      h1 Semantic Summary
-      p Overall positivity: {{Math.round(generic_analysis.sentiment.score * 10) / 10}} ({{sentimentToText(generic_analysis.sentiment)}})
-      p Overall emotion: {{Math.round(generic_analysis.sentiment.magnitude * 10) / 10}}
-      p Overall categories:
-      ul(v-if="generic_analysis.category instanceof Array" v-for="(category, index) in generic_analysis.category" :key="index")
-        li {{category.name}}
-      p Most meaningful word(s) overall: {{keyword(generic_analysis.entities).name}}
+    TweetSummary(:analysis="generic_analysis"
+                 :sentimentText="sentimentToText(generic_analysis.sentiment)"
+                 :keyword="keyword(generic_analysis.entities).name")
     LoadingIcon(v-if="!done")
     b-modal(id="tweetModal" title="Tweet details" ok-only)
             p(v-html="textWithKeyword(selected.text)")
@@ -27,11 +22,13 @@
 import { Component, Vue } from 'vue-property-decorator';
 import LoadingIcon from '@/components/LoadingIcon.vue';
 import TweetList from '@/components/TweetList.vue';
+import TweetSummary from '@/components/TweetSummary.vue'
 
 @Component({
   components: {
     LoadingIcon,
-    TweetList
+    TweetList,
+    TweetSummary
   }
 })
 
