@@ -1,6 +1,7 @@
 <template lang="pug">
   .container
     Header
+    button(@click="mergeTweets") CLICK THE DEBUG
     LoadingIcon(v-if="!done")
     b-modal(id="tweetModal" ok-only)
             | {{selected.text}}
@@ -52,14 +53,6 @@ export default class Tweets extends Vue {
     };
   }
 
-  mergeTweets(){
-    let map = ""
-    console.log(this.tweets.length)
-    map += (this.tweets.map(text => text.text)+" ")
-    console.log(map)
-    
-  }
-
   search(query : string) {
     this.axios.get(`${this.twitter_endpoint}${query}`).then((response) => {
       this.tweets = this.parse_tweets_json(response.data);
@@ -92,6 +85,15 @@ export default class Tweets extends Vue {
     }).catch((reason) => {
       this.analysis[type] = reason.response.data.details;
     });
+  }
+
+  mergeTweets(){
+    let map = ""
+    console.log(this.tweets.length)
+    map += (this.tweets.map((text : any) => text.text)+" ")
+    console.log(map)
+    this.analyse(map,map)
+    console.log(this.analysis)
   }
 
   parse_tweet(tweet : any) {
