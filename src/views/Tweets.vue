@@ -2,7 +2,8 @@
   .container
     LoadingIcon(v-if="!done")
     TweetDetails(:analysis="analysis"
-              :selected="selected")
+              :selected="selected"
+              :done="detailDone")
     TweetList(:tweets="tweets"
               v-if="done"
               @show-tweet="show_tweet")
@@ -28,7 +29,12 @@ export default class Tweets extends Vue {
 
   // Array of tweets fetched from twitter containg text, user, mentions and hashtags.
   tweets : Array<Object> = [];
+
+  // Show tweets process state
   done : boolean = false;
+
+  // Selected tweet analys state
+  detailDone : any = { sentiment : false, category : false, entities : false };
 
   // This is used to display the selected tweet in the popup when clicking on tweets
   selected = {};
@@ -71,8 +77,10 @@ export default class Tweets extends Vue {
   analyse(tweet : string, type : string) {
     this.axios.get(`${this.analysis_endpoint}?message=${tweet}&type=${type}`).then((resp) => {
       this.analysis[type] = resp.data;
+      Vue.set(this.detailDone, type, true);
     }).catch((reason) => {
       this.analysis[type] = reason.response.data.details;
+      Vue.set(this.detailDone, type, true);
     });
   }
 
