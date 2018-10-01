@@ -1,7 +1,8 @@
 <template lang="pug">
-  .container
+  .wrapper
     Header
-    Search
+    .container
+      Search
 </template>
 
 
