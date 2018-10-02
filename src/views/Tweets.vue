@@ -3,7 +3,6 @@
     TweetSummary(:analysis="generic_analysis"
                  :sentimentText="sentimentToText(generic_analysis.sentiment)"
                  :keyword="keyword(generic_analysis.entities).name")
-    LoadingIcon(v-if="!done")
     b-jumbotron(v-if="!done")
       LoadingIcon
     TweetDetails(:analysis="analysis"
