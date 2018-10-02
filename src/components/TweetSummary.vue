@@ -15,7 +15,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component
 export default class Search extends Vue {
-  @Prop({ default: {} }) analysis!: Array<Object>
+  @Prop({ default: {} }) analysis!: any
   @Prop({ default: ""}) sentimentText!: string
   @Prop({ default: ""}) keyword!: string
 }

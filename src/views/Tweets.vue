@@ -147,9 +147,9 @@ export default class Tweets extends Vue {
   }
 
   parse_tweet(tweet : any) {
-    let suffix = "";
+    let retweet_suffix = "";
     if ("retweeted_status" in tweet) {
-      suffix = ` 🔄 ${tweet.user.name}`;
+      retweet_suffix = ` 🔄 ${tweet.user.name}`;
       tweet = tweet.retweeted_status;
     }
 
@@ -172,7 +172,7 @@ export default class Tweets extends Vue {
 
     this.done = true;
 
-    return Object({text: text, hashtags: hashtags, mentions: mentions, user: tweet.user.name + suffix});
+    return Object({text: text, hashtags: hashtags, mentions: mentions, user: tweet.user.name + retweet_suffix});
   }
 }
 </script>
