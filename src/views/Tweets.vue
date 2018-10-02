@@ -124,7 +124,7 @@ export default class Tweets extends Vue {
     } else if (value <= -0.7 && value > -1) {
         txt = "This is something VERY negative!";
     } else {
-        txt = value
+        txt = "FAILED: Tweet don't contain enough words."
     }
     return txt;
   }
