@@ -1,6 +1,7 @@
 <template lang="pug">
   .container
-    LoadingIcon(v-if="!done")
+    b-jumbotron(v-if="!done")
+      LoadingIcon
     TweetDetails(:analysis="analysis"
               :selected="selected"
               :done="detailDone")
