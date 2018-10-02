@@ -1,5 +1,5 @@
 <template lang="pug">
-    b-modal(id="tweetModal" title="Tweet details" ok-only)
+    b-modal#tweetModal(title="Tweet details" ok-only)
         #entities
             strong Tweet:
             LoadingIcon(v-if="!done.entities")
