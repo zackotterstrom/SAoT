@@ -25,8 +25,8 @@ import TweetSummary from '@/components/TweetSummary.vue'
   components: {
     LoadingIcon,
     TweetList,
-    TweetSummary
-    TweetDetails,
+    TweetSummary,
+    TweetDetails
   }
 })
 
