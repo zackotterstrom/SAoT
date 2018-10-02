@@ -1,15 +1,9 @@
 <template lang="pug">
   .container
     LoadingIcon(v-if="!done")
-    b-modal(id="tweetModal" title="Tweet details" ok-only)
-            p(v-html="textWithKeyword(selected.text)")
-            br
-            strong {{sentimentToText(analysis.sentiment)}} ({{Math.round(analysis.sentiment.score * 10) / 10}})
-            br
-            br
-            strong Categories:
-            ul(v-if="analysis.category instanceof Array" v-for="(category, index) in analysis.category" :key="index")
-              li {{category.name}}
+    TweetDetails(:analysis="analysis"
+              :selected="selected"
+              :done="detailDone")
     TweetList(:tweets="tweets"
               v-if="done"
               @show-tweet="show_tweet")
@@ -18,11 +12,13 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import LoadingIcon from '@/components/LoadingIcon.vue';
+import TweetDetails from '@/components/TweetDetails.vue';
 import TweetList from '@/components/TweetList.vue';
 
 @Component({
   components: {
     LoadingIcon,
+    TweetDetails,
     TweetList
   }
 })
@@ -33,13 +29,15 @@ export default class Tweets extends Vue {
 
   // Array of tweets fetched from twitter containg text, user, mentions and hashtags.
   tweets : Array<Object> = [];
+
+  // Show tweets process state
   done : boolean = false;
+
+  // Selected tweet analys state
+  detailDone : any = { sentiment : false, category : false, entities : false };
 
   // This is used to display the selected tweet in the popup when clicking on tweets
   selected = {};
-
-  // Displayed when waiting for analysis.
-  loading_text = "Loading...";
 
   // This is used to display the semantic analysis of the selected tweet.
   analysis : any = { sentiment : {}, category : {}, entities : {} };
@@ -69,10 +67,6 @@ export default class Tweets extends Vue {
   show_tweet(tweet : any) {
     this.selected = tweet;
 
-    this.analysis.sentiment = this.loading_text;
-    this.analysis.category = this.loading_text;
-    this.analysis.entities = this.loading_text;
-
     this.analyse(tweet.text, "sentiment");
     this.analyse(tweet.text, "category");
     this.analyse(tweet.text, "entities");
@@ -83,10 +77,13 @@ export default class Tweets extends Vue {
   analyse(tweet : string, type : string) {
     this.axios.get(`${this.analysis_endpoint}?message=${tweet}&type=${type}`).then((resp) => {
       this.analysis[type] = resp.data;
+      Vue.set(this.detailDone, type, true);
     }).catch((reason) => {
       this.analysis[type] = reason.response.data.details;
+      Vue.set(this.detailDone, type, true);
     });
   }
+
 
   textWithKeyword(text : any) {
     if (text == undefined) return "";
@@ -128,7 +125,7 @@ export default class Tweets extends Vue {
     }
     return txt;
   }
-
+  
   parse_tweet(tweet : any) {
     if ("retweeted_status" in tweet) {
       tweet = tweet.retweeted_status;
