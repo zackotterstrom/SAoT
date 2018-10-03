@@ -5,7 +5,7 @@
         b-col#positivity
           Strong Overall positivity: 
           LoadingIcon(v-if="!done.sentiment")
-          p(v-if="done.sentiment") {{sentimentText}} ({{Math.round(analysis.sentiment.score * 10) / 10}})
+          p(v-if="done.sentiment") {{sentimentText}} ({{ analysis.sentiment.score.toFixed(1) }})
         b-col#emotion
           Strong Overall emotion:
           LoadingIcon(v-if="!done.sentiment")
@@ -14,6 +14,7 @@
         b-col#category
           Strong Overall categories:
           LoadingIcon(v-if="!done.category")
+          p(v-if="done.category && !(analysis.category instanceof Array)") {{ analysis.category }}
           div(v-if="analysis.category instanceof Array" v-for="(category, index) in analysis.category" :key="index")
             p {{category.name}}
         b-col#keyword
@@ -38,9 +39,5 @@ export default class Search extends Vue {
   @Prop({ default: "" }) sentimentText!: string
   @Prop({ default: "" }) keyword!: string
   @Prop({ default: {} }) done!: any
-
-  created() {
-    console.log(this.done);
-  }
 }
 </script>

@@ -77,32 +77,28 @@ export default class Tweets extends Vue {
   show_tweet(tweet : any) {
     this.selected = tweet;
 
-    this.analyse(tweet.text, "sentiment", this.analysis, false);
-    this.analyse(tweet.text, "category", this.analysis, false);
-    this.analyse(tweet.text, "entities", this.analysis, false);
+    this.analyse(tweet.text, "sentiment", this.analysis, this.detailDone);
+    this.analyse(tweet.text, "category", this.analysis, this.detailDone);
+    this.analyse(tweet.text, "entities", this.analysis, this.detailDone);
 
     this.$root.$emit('bv::show::modal','tweetModal');
   }
 
-  analyse(tweet : string, type : string, analysis : any, generic : boolean) {
+  analyse(tweet : string, type : string, analysis : any, doneStatus : any) {
     this.axios.get(`${this.analysis_endpoint}?message=${tweet}&type=${type}`).then((resp) => {
       analysis[type] = resp.data;
-      if(generic) {
-        Vue.set(this.summaryDone, type, true);
-      } else {
-        Vue.set(this.detailDone, type, true);
-      };
+      Vue.set(doneStatus, type, true);
     }).catch((reason) => {
       analysis[type] = reason.response.data.details;
-      Vue.set(this.detailDone, type, true);
+      Vue.set(doneStatus, type, true);
     });
   }
 
   analyseAllTweets(){
     let map = (this.tweets.map((text : any) => text.text)+" ");
-    this.analyse(map, "sentiment", this.generic_analysis, true);
-    this.analyse(map, "category", this.generic_analysis, true);
-    this.analyse(map, "entities", this.generic_analysis, true);
+    this.analyse(map, "sentiment", this.generic_analysis, this.summaryDone);
+    this.analyse(map, "category", this.generic_analysis, this.summaryDone);
+    this.analyse(map, "entities", this.generic_analysis, this.summaryDone);
   }
 
   textWithKeyword(text : any) {

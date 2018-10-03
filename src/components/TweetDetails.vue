@@ -10,7 +10,7 @@
                 b-col#sentiment
                     strong Sentiment:
                     LoadingIcon(v-if="!done.sentiment")
-                    p(v-if="done.sentiment") {{sentimentToText(analysis.sentiment)}} ({{Math.round(analysis.sentiment.score * 10) / 10}})
+                    p(v-if="done.sentiment") {{sentimentToText(analysis.sentiment)}} ({{ analysis.sentiment.score.toFixed(1) }})
                 b-col#category
                     strong Categories:
                     LoadingIcon(v-if="!done.category")
