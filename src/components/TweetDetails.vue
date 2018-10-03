@@ -1,19 +1,22 @@
 <template lang="pug">
     b-modal#tweetModal(title="Tweet details" ok-only)
-        #entities
-            strong Tweet:
-            LoadingIcon(v-if="!done.entities")
-            p(v-if="done.entities" v-html="textWithKeyword(selected.text)")
-        #sentiment
-            strong Sentiment:
-            LoadingIcon(v-if="!done.sentiment")
-            p(v-if="done.sentiment") {{sentimentToText(analysis.sentiment)}} ({{Math.round(analysis.sentiment.score * 10) / 10}})
-        #category
-            strong Categories:
-            LoadingIcon(v-if="!done.category")
-            p(v-if="done.category && !(analysis.category instanceof Array)") {{ analysis.category }}
-            ul(v-if="analysis.category instanceof Array" v-for="(category, index) in analysis.category" :key="index")
-                li(v-if="done.category") {{category.name}}
+        b-container
+            b-row
+                b-col#entities
+                    strong Tweet:
+                    LoadingIcon(v-if="!done.entities")
+                    p(v-if="done.entities" v-html="textWithKeyword(selected.text)")
+            b-row
+                b-col#sentiment
+                    strong Sentiment:
+                    LoadingIcon(v-if="!done.sentiment")
+                    p(v-if="done.sentiment") {{sentimentToText(analysis.sentiment)}} ({{ analysis.sentiment.score.toFixed(1) }})
+                b-col#category
+                    strong Categories:
+                    LoadingIcon(v-if="!done.category")
+                    p(v-if="done.category && !(analysis.category instanceof Array)") {{ analysis.category }}
+                    ul(v-if="analysis.category instanceof Array" v-for="(category, index) in analysis.category" :key="index")
+                        li(v-if="done.category") {{category.name}}
 </template>
 
 <script lang="ts">
