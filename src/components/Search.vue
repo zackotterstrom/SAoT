@@ -19,6 +19,7 @@
         b-form-radio(value="from") From user
     hr.my-4
     b-btn#link(variant="link") Advanced search
+    b-btn#link(variant="link" @click="goTweetable") Tweetable?
 </template>
 
 
@@ -34,6 +35,11 @@ export default class Search extends Vue {
   search() {
     this.$router.push({ name: 'tweets', params: { query: `?${this.search_method}=${this.query}&count=${this.count}` }});
   }
+
+  goTweetable(){
+    this.$router.push('Tweetable')
+  }
+
 }
 </script>
 

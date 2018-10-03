@@ -16,6 +16,11 @@ export default new Router({
       path: '/tweets',
       name: 'tweets',
       component: () => import('./views/Tweets.vue')
+    },
+    {
+      path: '/tweetable',
+      name: 'tweetable',
+      component: () => import ('./views/Tweetable.vue')
     }
   ]
 })
