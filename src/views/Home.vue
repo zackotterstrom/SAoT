@@ -1,5 +1,6 @@
 <template lang="pug">
-  Search
+  .container
+    Search
 </template>
 
 
@@ -9,8 +10,8 @@ import Search from '@/components/Search.vue';
 
 @Component({
   components: {
-    Search,
-  },
+    Search
+  }
 })
 export default class Home extends Vue {}
 </script>

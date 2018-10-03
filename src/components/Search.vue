@@ -1,21 +1,45 @@
 <template lang="pug">
-  b-jumbotron(bg-variant="info" text-variant="white" border-variant="dark")
-    template(slot="header") Testing
+  b-jumbotron(bg-variant="light" text-variant="dark")
+    template(slot="header") Search for tweet
     template(slot="lead")
-      | This is a text thart is uasdijo asidhn asoj dabsjd and
+      b-input-group(size="lg" class="mb-3" :prepend="search_method" @keyup.enter="search")
+        b-form-input(type="text" v-model="query")
+        b-form-input(type="number" min="1" max="100" placeholder="Tweet count" v-model="count")
+        b-input-group-append
+          b-btn(size="sm" variant="success" @click="search")
+            font-awesome-icon(icon="search")
+    b-form-group(label="Search method")
+      b-form-radio-group(id="btnradios2"
+                      buttons
+                      button-variant="outline-dark"
+                      size="lg"
+                      v-model="search_method"
+                      name="method")
+        b-form-radio(value="message") Keyword
+        b-form-radio(value="from") From user
     hr.my-4
-    p It is very nice
+    b-btn#link(variant="link") Advanced search
 </template>
 
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
 
 @Component
 export default class Search extends Vue {
-  @Prop() private msg!: string;
+  count : string = "10";
+  query : string = "Trump";
+  search_method : string = "message"
+
+  search() {
+    this.$router.push({ name: 'tweets', params: { query: `?${this.search_method}=${this.query}&count=${this.count}` }});
+  }
 }
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="sass">
+  #down
+    margin-top: 40px
+  p
+    text-align: left
 </style>
