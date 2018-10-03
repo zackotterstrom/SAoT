@@ -1,6 +1,5 @@
 <template lang="pug">
-    b-jumbotron
-      div#loading.mx-auto
+    div#loading.mx-auto
         div(v-for="x in 8")
 </template>
 
