@@ -2,7 +2,8 @@
   .container
     TweetSummary(:analysis="generic_analysis"
                  :sentimentText="sentimentToText(generic_analysis.sentiment)"
-                 :keyword="keyword(generic_analysis.entities).name")
+                 :keyword="keyword(generic_analysis.entities).name"
+                 :done="summaryDone")
     b-jumbotron(v-if="!done")
       LoadingIcon
     TweetDetails(:analysis="analysis"
@@ -36,11 +37,10 @@ export default class Tweets extends Vue {
   // Array of tweets fetched from twitter containg text, user, mentions and hashtags.
   tweets : Array<Object> = [];
 
-  // Show tweets process state
+  // Show tweets process state for different components
   done : boolean = false;
-
-  // Selected tweet analys state
   detailDone : any = { sentiment : false, category : false, entities : false };
+  summaryDone : any = { sentiment : false, category : false, entities : false };
 
   // This is used to display the selected tweet in the popup when clicking on tweets
   selected = {};
@@ -77,17 +77,21 @@ export default class Tweets extends Vue {
   show_tweet(tweet : any) {
     this.selected = tweet;
 
-    this.analyse(tweet.text, "sentiment", this.analysis);
-    this.analyse(tweet.text, "category", this.analysis);
-    this.analyse(tweet.text, "entities", this.analysis);
+    this.analyse(tweet.text, "sentiment", this.analysis, false);
+    this.analyse(tweet.text, "category", this.analysis, false);
+    this.analyse(tweet.text, "entities", this.analysis, false);
 
     this.$root.$emit('bv::show::modal','tweetModal');
   }
 
-  analyse(tweet : string, type : string, analysis : any) {
+  analyse(tweet : string, type : string, analysis : any, generic : boolean) {
     this.axios.get(`${this.analysis_endpoint}?message=${tweet}&type=${type}`).then((resp) => {
       analysis[type] = resp.data;
-      Vue.set(this.detailDone, type, true);
+      if(generic) {
+        Vue.set(this.summaryDone, type, true);
+      } else {
+        Vue.set(this.detailDone, type, true);
+      };
     }).catch((reason) => {
       analysis[type] = reason.response.data.details;
       Vue.set(this.detailDone, type, true);
@@ -96,9 +100,9 @@ export default class Tweets extends Vue {
 
   analyseAllTweets(){
     let map = (this.tweets.map((text : any) => text.text)+" ");
-    this.analyse(map, "sentiment", this.generic_analysis);
-    this.analyse(map, "category", this.generic_analysis);
-    this.analyse(map, "entities", this.generic_analysis);
+    this.analyse(map, "sentiment", this.generic_analysis, true);
+    this.analyse(map, "category", this.generic_analysis, true);
+    this.analyse(map, "entities", this.generic_analysis, true);
   }
 
   textWithKeyword(text : any) {
