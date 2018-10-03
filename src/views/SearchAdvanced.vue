@@ -7,32 +7,33 @@
           legend
             span Words
           .txt
-            label.t1-label
+            label
               span.td All of these words
               input(name='ands' type='text' v-model="all_words")
           .txt
-            label.t1-label
+            label
               span.td This exact phrase
               input(name='phrase' type='text' v-model="exact_words")
           .txt
-            label.t1-label
+            label
               span.td Any of these words
-              input(name='ors' type='text')
+              input(name='ors' type='text' v-model="any_words")
           .txt
-            label.t1-label
+            label
               span.td None of these words
-              input(name='nots' type='text')
+              input(name='nots' type='text' v-model="none_words")
           .txt
-            label.t1-label
+            label
               span.td These hashtags
-              input(name='tag' type='text')
+              input(name='tag' type='text' v-model="hashtags")
           .txt
-            label.t1-label
+            label
               span.td Written in
-              select#lang.t1-select(name='lang')
-                option(value='all' selected='selected') All languages
+              select(name='lang' v-model="lang")
+                option(value='all') All languages
                 option(disabled='disabled') ---
                 option(value='en') English (English)
+                option(value='sv') Swedish (svenska)
                 option(value='ja') Japanese (&#x65E5;&#x672C;&#x8A9E;)
                 option(value='ar') Arabic (&#x627;&#x644;&#x639;&#x631;&#x628;&#x64A;&#x629;)
                 option(value='es') Spanish (espa&ntilde;ol)
@@ -83,7 +84,6 @@
                 option(value='sd') Sindhi (&#x633;&#x646;&#x68C;&#x64A;)
                 option(value='si') Sinhala (&#xDC3;&#xDD2;&#xD82;&#xDC4;&#xDBD;)
                 option(value='sl') Slovenian (sloven&scaron;&ccaron;ina)
-                option(value='sv') Swedish (svenska)
                 option(value='tl') Tagalog (Tagalog)
                 option(value='ta') Tamil (&#xBA4;&#xBAE;&#xBBF;&#xBB4;&#xBCD;)
                 option(value='te') Telugu (&#xC24;&#xC46;&#xC32;&#xC41;&#xC17;&#xC41;)
@@ -99,17 +99,32 @@
           .txt
             label.t1-label
               span.td From these accounts
-              input(name='from' type='text')
+              input(name='from' type='text' v-model="from")
           .txt
             label.t1-label
               span.td To these accounts
-              input(name='to' type='text')
+              input(name='to' type='text' v-model="to")
           .txt
             label.t1-label
               span.td Mentioning these accounts
-              input(name='ref' type='text')
+              input(name='ref' type='text' v-model="mention")
+        fieldset
+          legend
+            span Other
+          .txt
+            label.t1-label
+              span.td Tweet count
+              input(type="number" min="1" max="100" v-model="count")
+          .txt
+            label.t1-label
+              span.td Result type
+              select(name='result_type' v-model="result_type")
+                option(value='mixed') Include popular and recent.
+                option(value='recent') Only recent.
+                option(value='popular') Only popular.
         b-btn(size="sm" variant="success" @click="search") Search
           font-awesome-icon.ml-1(icon="search")
+        p {{query}}
 </template>
 
 
@@ -120,14 +135,62 @@ import { Component, Vue } from 'vue-property-decorator';
 export default class SearchAdvanced extends Vue {
   all_words = "";
   exact_words = "";
+  lang = "all";
+  any_words = "";
+  none_words = "";
+  hashtags = "";
+  from = "";
+  to = "";
+  mention = "";
+  count = "100";
+  result_type = "mixed";
 
-  search() {
+  get query() {
     let query = this.all_words;
     if (this.exact_words) {
-      query += ` "${this.exact_words}"`;
+      query += ` "${this.exact_words.trim()}"`;
     }
 
-    this.$router.push({ name: 'tweets', params: { query: `?message=${query}&count=100&lang=${this.lang}`}});
+    if (this.any_words) {
+      query += ` ${this.any_words.trim().split(" ")
+                        .join(" OR ")}`;
+    }
+
+    if (this.none_words) {
+      query += ` ${this.none_words.trim().split(" ")
+                        .map((m : any) => m[0] == '-' ? m : '-' + m)
+                        .join(" ")}`;
+    }
+
+    if (this.hashtags) {
+      query += ` ${this.hashtags.trim().split(" ")
+                        .map((m : any) => m[0] == '#' ? m : '#' + m)
+                        .join(" OR ")}`;
+    }
+
+    if (this.from) {
+      query += ` ${this.from.trim().split(" ")
+                        .map((m : any) => 'from:' + m)
+                        .join(" OR ")}`;
+    }
+
+    if (this.to) {
+      query += ` ${this.to.trim().split(" ")
+                        .map((m : any) => 'to:' + m)
+                        .join(" OR ")}`;
+    }
+
+    if (this.mention) {
+      query += ` ${this.mention.trim().split(" ")
+                        .map((m : any) => m[0] == '@' ? m : '@' + m)
+                        .join(" OR ")}`;
+    }
+
+    return query;
+  }
+
+  search() {
+    this.$router.push({ name: 'tweets', params: { query: `?message=${this.query}&count=${this.count}&lang=${this.lang}&result_type=${this.result_type}`}});
   }
 }
 </script>
