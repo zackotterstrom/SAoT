@@ -16,11 +16,11 @@ export default new Router({
       path: '/tweets',
       name: 'tweets',
       component: () => import('./views/Tweets.vue')
-    }, 
+    },
     {
       path: '/about',
-      name: 'about', 
-      component: () => import('./views/about.vue')
+      name: 'about',
+      component: () => import('./views/About.vue')
     }
   ]
 })
