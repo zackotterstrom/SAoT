@@ -35,12 +35,12 @@ export default class Tweets extends Vue {
     textWithKeyword(text : any) {
         if (text == undefined) return "";
         let keyword = this.keyword(this.analysis.entities);
-        if (keyword == "") return "";
+        if (keyword == "" || keyword == undefined) return text;
 
         return text.replace(new RegExp(keyword.name, "gi"), (match : string) => {
         return `<u v-b-tooltip.hover title="Importance: ${Math.round(keyword.salience * 10) / 10}" class="text-danger">${match}</u>`;
         });
-        
+
     }
 
     keyword(value : any) {
