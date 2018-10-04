@@ -20,14 +20,16 @@ import { Component, Vue } from 'vue-property-decorator';
 import LoadingIcon from '@/components/LoadingIcon.vue';
 import TweetDetails from '@/components/TweetDetails.vue';
 import TweetList from '@/components/TweetList.vue';
-import TweetSummary from '@/components/TweetSummary.vue'
+import TweetSummary from '@/components/TweetSummary.vue';
+import TweetGauge from '@/components/TweetGauge.vue';
 
 @Component({
   components: {
     LoadingIcon,
     TweetList,
     TweetSummary,
-    TweetDetails
+    TweetDetails,
+    TweetGauge
   }
 })
 

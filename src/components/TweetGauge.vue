@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-const AmCharts = require('amcharts3/amcharts/amcharts');
+const AmCharts = require('amcharts3'); require('amcharts3/amcharts/serial');
 
 @Component
 export default class TweetGauge extends Vue {
