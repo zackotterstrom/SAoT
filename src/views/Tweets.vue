@@ -12,7 +12,6 @@
     TweetList(:tweets="tweets"
               v-if="done"
               @show-tweet="show_tweet")
-    TweetGauge(id="gauge")
 </template>
 
 <script lang="ts">
@@ -21,15 +20,13 @@ import LoadingIcon from '@/components/LoadingIcon.vue';
 import TweetDetails from '@/components/TweetDetails.vue';
 import TweetList from '@/components/TweetList.vue';
 import TweetSummary from '@/components/TweetSummary.vue';
-import TweetGauge from '@/components/TweetGauge.vue';
 
 @Component({
   components: {
     LoadingIcon,
     TweetList,
     TweetSummary,
-    TweetDetails,
-    TweetGauge
+    TweetDetails
   }
 })
 

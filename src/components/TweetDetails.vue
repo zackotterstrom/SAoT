@@ -8,9 +8,16 @@
                     p(v-if="done.entities" v-html="textWithKeyword(selected.text)")
             b-row
                 b-col#sentiment
-                    strong Sentiment:
+                    strong Positivity:
                     LoadingIcon(v-if="!done.sentiment")
                     p(v-if="done.sentiment") {{sentimentToText(analysis.sentiment)}} ({{ analysis.sentiment.score.toFixed(1) }})
+                    TweetGauge(v-if="done.sentiment" :percent="(analysis.sentiment.score + 1) * 50" id="details_sentiment_guage" w="200" :sections="sentiment_sections")
+                b-col#emotion
+                    strong Emotion:
+                    LoadingIcon(v-if="!done.sentiment")
+                    p(v-if="done.sentiment") {{ analysis.sentiment.magnitude.toFixed(1) }}
+                    TweetGauge(v-if="done.sentiment" :percent="(analysis.sentiment.magnitude) * 20" id="details_emotion_guage" w="200" :sections="emotion_sections")
+            b-row
                 b-col#category
                     strong Categories:
                     LoadingIcon(v-if="!done.category")
@@ -22,10 +29,12 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import LoadingIcon from '@/components/LoadingIcon.vue';
+import TweetGauge from '@/components/TweetGauge.vue';
 
 @Component({
   components: {
-    LoadingIcon
+    LoadingIcon,
+    TweetGauge
   }
 })
 

@@ -13,5 +13,5 @@ import Search from '@/components/Search.vue';
     Search
   }
 })
-export default class Home extends Vue {}
+export default class Home extends Vue { }
 </script>

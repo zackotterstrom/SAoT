@@ -4,14 +4,14 @@
         text-variant="dark"
     )
         h1(@click="goHome") SAoT
-        b-navbar#navs(toggleable="md" 
-            type="dark" 
+        b-navbar#navs(toggleable="md"
+            type="dark"
             variant="dark"
         )
             b-navbar-nav#navbar
-                b-nav-item(href='/' ) Home
-                b-nav-item(href='/about' ) About
-                
+                b-nav-item(@click="goHome") Home
+                b-nav-item(@click="goAbout") About
+
 
 </template>
 
@@ -21,7 +21,11 @@ import { Component, Vue } from 'vue-property-decorator';
 @Component
 export default class Header extends Vue {
     goHome() {
-        this.$router.push("/");
+      this.$router.push("/");
+    };
+
+    goAbout() {
+      this.$router.push("/about");
     };
 };
 </script>
