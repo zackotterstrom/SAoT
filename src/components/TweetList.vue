@@ -3,9 +3,9 @@
         b-list-group
             b-list-group-item.pointer(v-for="(node, index) in tweets" :key="index" @click="show_tweet(node)").flex-column.align.items.start
                 .d-flex.w-100.justify-content-between
-                h5.mb-1 {{node['user']}}
-                small mentions: {{node.mentions.length}}
-                p.mb-1 {{node['text']}}
+                h5.mb-1 {{ node.user['name'] }}
+                small mentions: {{ node.entities.mentions.length }}
+                p.mb-1 {{ node['text'] }}
 </template>
 
 <script lang="ts">
