@@ -7,11 +7,11 @@
     b-jumbotron(v-if="!done")
       LoadingIcon
     TweetDetails(:analysis="analysis"
-              :selected="selected"
-              :done="detailDone")
+                :selected="selected"
+                :done="detailDone")
     TweetList(:tweets="tweets"
-              v-if="done"
-              @show-tweet="show_tweet")
+                v-if="done"
+                @show-tweet="show_tweet")
 </template>
 
 <script lang="ts">
@@ -150,8 +150,19 @@ export default class Tweets extends Vue {
       tweet = tweet.retweeted_status;
     }
 
-    let hashtags = tweet.entities.hashtags.map((m : any) => m.text);
-    let mentions = tweet.entities.user_mentions.map((m : any) => m.name);
+    let media = {
+      photo: "",
+      video: ""
+    }
+    if (tweet.extended_entities) {
+      tweet.extended_entities.media.forEach((m : any) => {
+        if (m.type == "photo") {
+          media.photo = m.media_url;
+        } else if (m.type == "video") {
+          media.video = m.media_url;
+        };
+      })
+    };
 
     let indices : Array<number[]> = [];
     tweet.entities.hashtags.forEach((m : any) => indices.push(m.indices));
@@ -169,7 +180,23 @@ export default class Tweets extends Vue {
 
     this.done = true;
 
-    return Object({text: text, hashtags: hashtags, mentions: mentions, user: tweet.user.name + retweet_suffix});
+    return Object({
+      text: text,
+      entities: {
+        hashtags: tweet.entities.hashtags.map((m : any) => m.text),
+        mentions: tweet.entities.user_mentions.map((m : any) => Object({
+          name: m.name,
+          account: `https://twitter.com/${m.screen_name}`
+        })),
+        urls: tweet.entities.urls.map((m : any) => m.url),
+        media: media
+      },
+      user: {
+        name: tweet.user.name + retweet_suffix,
+        profile: "https://twitter.com/" + tweet.user.screen_name,
+        pic: tweet.user.profile_image_url
+      }
+    });
   }
 }
 </script>

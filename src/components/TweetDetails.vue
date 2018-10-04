@@ -2,21 +2,43 @@
     b-modal#tweetModal(title="Tweet details" ok-only)
         b-container
             b-row
+                b-col#user(v-if="selected.user")
+                    b-link(target="_blank" :href="selected.user.profile")
+                        b-img.m-1(rounded="circle" width="50" height="50" alt="user" :src="selected.user.pic")
+                    b-link(target="_blank" :href="selected.user.profile")
+                        Strong  {{ selected.user.name }}
+            b-row
                 b-col#entities
-                    strong Tweet:
                     LoadingIcon(v-if="!done.entities")
                     p(v-if="done.entities" v-html="textWithKeyword(selected.text)")
+            b-row(v-if="selected.entities")
+                b-col#photo(v-if="selected.entities.media" cols="12")
+                    b-img.w-100(v-if="selected.entities.media.photo != ''" :src="selected.entities.media.photo")
+                b-col#hashtags(v-if="selected.entities.hashtags.length > 0" cols="12")
+                    Strong Hashtags:
+                    ul(v-if="selected.entities.hashtags instanceof Array" v-for="(hashtag, index) in selected.entities.hashtags" :key="index")
+                        li {{ hashtag }}
+                b-col#mentions(v-if="selected.entities.mentions.length > 0" cols="12")
+                    Strong Mentions:
+                    ul(v-if="selected.entities.mentions instanceof Array" v-for="(mention, index) in selected.entities.mentions" :key="index")
+                        li
+                            b-link(target="_blank" :href="mention.account") {{ mention.name }}
+                b-col#urls(v-if="selected.entities.urls.length > 0" cols="12")
+                    Strong Links:
+                    ul(v-if="selected.entities.urls instanceof Array" v-for="(url, index) in selected.entities.urls" :key="index")
+                        li
+                            b-link(target="_blank" :href="url") {{ url }}
             b-row
                 b-col#sentiment
                     strong Sentiment:
                     LoadingIcon(v-if="!done.sentiment")
-                    p(v-if="done.sentiment") {{sentimentToText(analysis.sentiment)}} ({{ analysis.sentiment.score.toFixed(1) }})
+                    p(v-if="done.sentiment") {{ sentimentToText(analysis.sentiment )}} ({{ analysis.sentiment.score.toFixed(1) }})
                 b-col#category
                     strong Categories:
                     LoadingIcon(v-if="!done.category")
                     p(v-if="done.category && !(analysis.category instanceof Array)") {{ analysis.category }}
                     ul(v-if="analysis.category instanceof Array" v-for="(category, index) in analysis.category" :key="index")
-                        li(v-if="done.category") {{category.name}}
+                        li(v-if="done.category") {{ category.name }}
 </template>
 
 <script lang="ts">
@@ -78,3 +100,8 @@ export default class Tweets extends Vue {
     }
 }
 </script>
+
+<style lang="sass">
+    .text-danger
+        cursor: default
+</style>
