@@ -37,6 +37,9 @@
       "autoprefixer": {}
     }
   },
+  "transformToRequire": {
+    "b-img": "src"
+  },
   "browserslist": [
     "> 1%",
     "last 2 versions",
