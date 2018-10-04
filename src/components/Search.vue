@@ -16,7 +16,7 @@
                       v-model="search_method"
                       name="method")
         b-form-radio(value="message") Keyword
-        b-form-radio(value="from") From user
+        b-form-radio(value="from") From user        
     hr.my-4
     b-btn#link(variant="link") Advanced search
 </template>
@@ -33,6 +33,10 @@ export default class Search extends Vue {
 
   search() {
     this.$router.push({ name: 'tweets', params: { query: `?${this.search_method}=${this.query}&count=${this.count}` }});
+  }
+  
+  list(){
+    
   }
 }
 </script>

@@ -1,8 +1,7 @@
 <template lang="pug">
-  .wrapper
-    Header
     .container
-      AboutInfo
+        AboutInfo
+        
 </template>
 
 <script lang="ts">

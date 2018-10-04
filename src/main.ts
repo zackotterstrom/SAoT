@@ -7,6 +7,7 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
+import { amcharts } from '@amcharts3/amcharts/amcharts'
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
@@ -24,3 +25,4 @@ new Vue({
   router,
   render: h => h(App)
 }).$mount('#app')
+
