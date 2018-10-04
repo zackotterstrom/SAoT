@@ -18,8 +18,8 @@
         b-form-radio(value="message") Keyword
         b-form-radio(value="from") From user
     hr.my-4
-    b-btn#link(variant="link") Advanced search
-    b-btn#link(variant="link" @click="goTweetable") Tweetable?
+    router-link(variant="link" to="/search-advanced") Advanced search
+    router-link.ml-3(variant="link" to="/tweetable") Tweetable?
 </template>
 
 
@@ -47,5 +47,5 @@ export default class Search extends Vue {
   #down
     margin-top: 40px
   p
-    text-align: left
+    text-align: leftg
 </style>

@@ -16,11 +16,21 @@ export default new Router({
       path: '/tweets',
       name: 'tweets',
       component: () => import('./views/Tweets.vue')
+    }, 
+    {
+      path: '/about',
+      name: 'about', 
+      component: () => import('./views/about.vue')
+    },
+    {
+      path: '/search-advanced',
+      name: 'search_advanced',
+      component: () => import('./views/SearchAdvanced.vue')
     },
     {
       path: '/tweetable',
       name: 'tweetable',
-      component: () => import ('./views/Tweetable.vue')
+      component: () => import('./views/Tweetable.vue')
     }
   ]
 })
