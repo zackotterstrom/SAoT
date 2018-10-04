@@ -20,6 +20,7 @@ import LoadingIcon from '@/components/LoadingIcon.vue';
 import TweetDetails from '@/components/TweetDetails.vue';
 import TweetList from '@/components/TweetList.vue';
 import TweetSummary from '@/components/TweetSummary.vue'
+import {tsearch, analyse, sentimentToText} from '@/api'
 
 @Component({
   components: {
@@ -31,9 +32,6 @@ import TweetSummary from '@/components/TweetSummary.vue'
 })
 
 export default class Tweets extends Vue {
-  twitter_endpoint : string = `https://us-central1-saot-217513.cloudfunctions.net/tweets`;
-  analysis_endpoint : string = `http://us-central1-saot-217513.cloudfunctions.net/sentiment-analysis`;
-
   // Array of tweets fetched from twitter containg text, user, mentions and hashtags.
   tweets : Array<Object> = [];
 
@@ -60,7 +58,7 @@ export default class Tweets extends Vue {
   }
 
   search(query : string) {
-    this.axios.get(`${this.twitter_endpoint}${query}`).then((response) => {
+    tsearch(query).then((response : any) => {
       this.tweets = this.parse_tweets_json(response.data);
       this.analyseAllTweets();
     })
@@ -77,28 +75,18 @@ export default class Tweets extends Vue {
   show_tweet(tweet : any) {
     this.selected = tweet;
 
-    this.analyse(tweet.text, "sentiment", this.analysis, this.detailDone);
-    this.analyse(tweet.text, "category", this.analysis, this.detailDone);
-    this.analyse(tweet.text, "entities", this.analysis, this.detailDone);
+    analyse(Vue, tweet.text, "sentiment", this.analysis, this.detailDone);
+    analyse(Vue, tweet.text, "category", this.analysis, this.detailDone);
+    analyse(Vue, tweet.text, "entities", this.analysis, this.detailDone);
 
     this.$root.$emit('bv::show::modal','tweetModal');
   }
 
-  analyse(tweet : string, type : string, analysis : any, doneStatus : any) {
-    this.axios.get(`${this.analysis_endpoint}?message=${tweet}&type=${type}`).then((resp) => {
-      analysis[type] = resp.data;
-      Vue.set(doneStatus, type, true);
-    }).catch((reason) => {
-      analysis[type] = reason.response.data.details;
-      Vue.set(doneStatus, type, true);
-    });
-  }
-
   analyseAllTweets(){
-    let map = (this.tweets.map((text : any) => text.text)+" ");
-    this.analyse(map, "sentiment", this.generic_analysis, this.summaryDone);
-    this.analyse(map, "category", this.generic_analysis, this.summaryDone);
-    this.analyse(map, "entities", this.generic_analysis, this.summaryDone);
+    let document = (this.tweets.map((text : any) => text.text)+" ");
+    analyse(Vue, document, "sentiment", this.generic_analysis, this.summaryDone);
+    analyse(Vue, document, "category", this.generic_analysis, this.summaryDone);
+    analyse(Vue, document, "entities", this.generic_analysis, this.summaryDone);
   }
 
   textWithKeyword(text : any) {
@@ -116,31 +104,6 @@ export default class Tweets extends Vue {
       return JSON.parse(JSON.stringify(value)).sort((a : any, b : any) => b.salience - a.salience)[0];
     }
     return "";
-  }
-
-  sentimentToText(value : any) {
-    if (value == undefined) return "";
-    let txt = "";
-    value = value.score;
-
-    if (value <= 1 && value > 0.7) {
-        txt = "This is something VERY positive!";
-    } else if (value <= 0.7 && value > 0.3) {
-        txt = "This is positive!";
-    } else if (value <= 0.3 && value > 0) {
-        txt = "This is kinda positive.";
-    } else if (value == 0) {
-        txt = "This is neutral.";
-    } else if (value <= 0 && value > -0.3) {
-        txt = "This is kinda negative.";
-    } else if (value <= -0.3 && value > -0.7) {
-        txt = "This is negative.";
-    } else if (value <= -0.7 && value > -1) {
-        txt = "This is something VERY negative!";
-    } else {
-        txt = value
-    }
-    return txt;
   }
 
   parse_tweet(tweet : any) {
