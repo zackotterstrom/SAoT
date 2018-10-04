@@ -30,6 +30,7 @@
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import LoadingIcon from '@/components/LoadingIcon.vue';
 import TweetGauge from '@/components/TweetGauge.vue';
+import {sentimentToText} from "@/api";
 
 @Component({
   components: {
@@ -45,45 +46,19 @@ export default class Tweets extends Vue {
 
 
     textWithKeyword(text : any) {
-        if (text == undefined) return "";
-        let keyword = this.keyword(this.analysis.entities);
-        if (keyword == "" || keyword == undefined) return text;
+      if (text == undefined) return "";
+      let keyword = this.keyword(this.analysis.entities);
+      if (keyword == "" || keyword == undefined) return text;
 
-        return text.replace(new RegExp(keyword.name, "gi"), (match : string) => {
+      return text.replace(new RegExp(keyword.name, "gi"), (match : string) => {
         return `<u v-b-tooltip.hover title="Importance: ${Math.round(keyword.salience * 10) / 10}" class="text-danger">${match}</u>`;
-        });
-
+      });
     }
 
     keyword(value : any) {
-        if (value instanceof Array) {
-            return JSON.parse(JSON.stringify(value)).sort((a : any, b : any) => b.salience - a.salience)[0];
-        };
-            return "";
-    }
-
-    sentimentToText(value : any) {
-        let txt = "";
-        value = value.score;
-
-        if (value <= 1 && value > 0.7) {
-            txt = "This is something VERY positive!";
-        } else if (value <= 0.7 && value > 0.3) {
-            txt = "This is positive!";
-        } else if (value <= 0.3 && value > 0) {
-            txt = "This is kinda positive.";
-        } else if (value == 0) {
-            txt = "This is neutral.";
-        } else if (value <= 0 && value > -0.3) {
-            txt = "This is kinda negative.";
-        } else if (value <= -0.3 && value > -0.7) {
-            txt = "This is negative.";
-        } else if (value <= -0.7 && value > -1) {
-            txt = "This is something VERY negative!";
-        } else {
-            txt = value
-        }
-        return txt;
+      // We use json parse and stringify to duplicate the array so we can modify it without creating an infinite loop
+      if (value instanceof Array) return JSON.parse(JSON.stringify(value)).sort((a : any, b : any) => b.salience - a.salience)[0];
+      else return "";
     }
 }
 </script>

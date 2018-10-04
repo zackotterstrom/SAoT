@@ -18,7 +18,7 @@
         b-form-radio(value="message") Keyword
         b-form-radio(value="from") From user        
     hr.my-4
-    b-btn#link(variant="link") Advanced search
+    router-link(variant="link" to="/search-advanced") Advanced search
 </template>
 
 
