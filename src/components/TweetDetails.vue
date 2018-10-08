@@ -29,16 +29,19 @@
                         li
                             b-link(target="_blank" :href="url") {{ url }}
             b-row
-                b-col#sentiment
+                b-col#sentiment(cols="6")
                     strong Positivity:
                     LoadingIcon(v-if="!done.sentiment")
                     p(v-if="done.sentiment") {{sentimentToText(analysis.sentiment)}} ({{ analysis.sentiment.score.toFixed(1) }})
-                    TweetGauge(v-if="done.sentiment" :percent="(analysis.sentiment.score + 1) * 50" id="details_sentiment_guage" w="200" :sections="sentiment_sections")
-                b-col#emotion
+                b-col#emotion(cols="6")
                     strong Emotion:
                     LoadingIcon(v-if="!done.sentiment")
                     p(v-if="done.sentiment") {{ analysis.sentiment.magnitude.toFixed(1) }}
-                    TweetGauge(v-if="done.sentiment" :percent="(analysis.sentiment.magnitude) * 20" id="details_emotion_guage" w="200" :sections="emotion_sections")
+            b-row
+                b-col#sentiment_gauge(cols="6")
+                    TweetGauge#details_sentiment_guage(v-if="done.sentiment" :percent="(analysis.sentiment.score + 1) * 50" w="200" :sections="sentiment_sections")
+                b-col#emotion_gauge(cols="6")
+                    TweetGauge#details_emotion_guage(v-if="done.sentiment" :percent="(analysis.sentiment.magnitude) * 20" w="200" :sections="emotion_sections")
             b-row
                 b-col#category
                     strong Categories:

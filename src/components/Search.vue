@@ -34,10 +34,6 @@ export default class Search extends Vue {
   search() {
     this.$router.push({ name: 'tweets', params: { query: `?${this.search_method}=${this.query}&count=${this.count}` }});
   }
-  
-  list(){
-    
-  }
 }
 </script>
 
