@@ -1,5 +1,5 @@
 <template lang="pug">
-    b-modal#tweetModal(title="Tweet details" ok-only)
+    b-modal#tweetModal(title="Tweet details" @ok="closeModal" ok-only)
         b-container
             b-row
                 b-col#user(v-if="selected.user")
@@ -84,6 +84,12 @@ export default class Tweets extends Vue {
       // We use json parse and stringify to duplicate the array so we can modify it without creating an infinite loop
       if (value instanceof Array) return JSON.parse(JSON.stringify(value)).sort((a : any, b : any) => b.salience - a.salience)[0];
       else return "";
+    }
+
+    closeModal() {
+        this.done.sentiment = false;
+        this.done.category = false;
+        this.done.entities = false;
     }
 }
 </script>
