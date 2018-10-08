@@ -6,7 +6,7 @@
         b-form-input(type="text" v-model="query")
         b-form-input(type="number" min="1" max="100" placeholder="Tweet count" v-model="count")
         b-input-group-append
-          b-btn(size="sm" variant="success" @click="search")
+          b-btn(size="sm" variant="success" @click="search" :disabled="query.length == 0")
             font-awesome-icon(icon="search")
     b-form-group(label="Search method")
       b-form-radio-group(id="btnradios2"
