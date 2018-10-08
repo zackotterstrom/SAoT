@@ -19,8 +19,8 @@ import { Component, Vue } from 'vue-property-decorator';
 import LoadingIcon from '@/components/LoadingIcon.vue';
 import TweetDetails from '@/components/TweetDetails.vue';
 import TweetList from '@/components/TweetList.vue';
-import TweetSummary from '@/components/TweetSummary.vue'
-import {tsearch, analyse, sentimentToText} from '@/api'
+import TweetSummary from '@/components/TweetSummary.vue';
+import {tsearch, analyse, sentimentToText} from '@/api';
 
 @Component({
   components: {
@@ -30,6 +30,7 @@ import {tsearch, analyse, sentimentToText} from '@/api'
     TweetDetails
   }
 })
+
 
 export default class Tweets extends Vue {
   // Array of tweets fetched from twitter containg text, user, mentions and hashtags.

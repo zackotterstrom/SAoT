@@ -16,7 +16,7 @@
                       v-model="search_method"
                       name="method")
         b-form-radio(value="message") Keyword
-        b-form-radio(value="from") From user
+        b-form-radio(value="from") From user        
     hr.my-4
     router-link(variant="link" to="/search-advanced") Advanced search
 </template>
