@@ -1,14 +1,15 @@
 <template lang="pug">
   .container
-    TweetSummary(:analysis="generic_analysis"
+    TweetSummary(v-if="tweets.length > 0"
+                 :analysis="generic_analysis"
                  :sentimentText="sentimentToText(generic_analysis.sentiment)"
                  :keyword="keyword(generic_analysis.entities).name"
                  :done="summaryDone")
-    b-jumbotron(v-if="!done")
+    b-jumbotron(v-if="!done ")
       LoadingIcon
     TweetDetails(:analysis="analysis"
-                :selected="selected"
-                :done="detailDone")
+                 :selected="selected"
+                 :done="detailDone")
     TweetList(:tweets="tweets"
                 v-if="done"
                 @show-tweet="show_tweet")
@@ -61,16 +62,19 @@ export default class Tweets extends Vue {
   search(query : string) {
     tsearch(query).then((response : any) => {
       this.tweets = this.parse_tweets_json(response.data);
-      this.analyseAllTweets();
+      if (this.tweets.length == 0) {
+        this.done = true;
+        this.summaryDone.sentiment = true;
+        this.summaryDone.category = true;
+        this.summaryDone.entities = true;
+      } else {
+        this.analyseAllTweets();
+      }
     })
   }
 
   parse_tweets_json(json : any) {
     return json.statuses.map((e : any) => this.parse_tweet(e));
-  }
-
-  read_json(json : any){
-    return JSON.parse(json)
   }
 
   show_tweet(tweet : any) {

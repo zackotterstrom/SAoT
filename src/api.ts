@@ -1,11 +1,3 @@
-/*export module api {
-
-
-  export function search(query : string) {
-    return axios.get(`${twitter_endpoint}${query}`);
-  }
-}
-*/
 import axios from 'axios'
 
 const twitter_endpoint = `https://us-central1-saot-217513.cloudfunctions.net/tweets`;
