@@ -10,7 +10,7 @@
         b-col#emotion
           Strong Overall emotion:
           LoadingIcon(v-if="!done.sentiment")
-          p(v-if="done.sentiment") {{analysis.sentiment.magnitude.toFixed(1)}}
+          p(v-if="done.sentiment") {{magnitudeText}} ({{ analysis.sentiment.magnitude.toFixed(1) }})
           TweetGauge(v-if="done.sentiment" :percent="(analysis.sentiment.magnitude) * 20" id="summary_emotion_guage" :sections="emotion_sections")
       b-row
         b-col#category
@@ -41,6 +41,7 @@ import TweetGauge from '@/components/TweetGauge.vue';
 export default class Search extends Vue {
   @Prop({ default: {} }) analysis!: any
   @Prop({ default: "" }) sentimentText!: string
+  @Prop({ default: "" }) magnitudeText!: string
   @Prop({ default: "" }) keyword!: string
   @Prop({ default: {} }) done!: any
 }
