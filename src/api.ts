@@ -8,7 +8,7 @@ export function tsearch(query : string) : any {
 }
 
 export function analyse(Vue : any, tweet : string, type : string, analysis : any, doneStatus : any) {
-  axios.get(`${analysis_endpoint}?message=${tweet}&type=${type}`).then((resp) => {
+  axios.post(analysis_endpoint, {message: tweet, type: type}).then((resp) => {
     analysis[type] = resp.data;
     Vue.set(doneStatus, type, true);
   }).catch((reason) => {
