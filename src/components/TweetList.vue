@@ -5,9 +5,9 @@
                 h5.mb-1 {{ node.user['name'] }}
                 small mentions: {{ node.entities.mentions.length }}
                 p.mb-1 {{ node['text'] }}
-        .text-xl-center(v-if="tweets.length == 0")
+        p.text-xl-center(v-if="tweets.length == 0")
             font-awesome-icon(icon="exclamation-circle")
-            p No one seems to be tweeting about this subject!
+            |  No one seems to be tweeting about this subject!
 </template>
 
 <script lang="ts">

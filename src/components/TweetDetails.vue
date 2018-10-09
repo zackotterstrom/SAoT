@@ -28,27 +28,30 @@
                     ul(v-if="selected.entities.urls instanceof Array" v-for="(url, index) in selected.entities.urls" :key="index")
                         li
                             b-link(target="_blank" :href="url") {{ url }}
-            b-row
+            b-row(v-if="typeof analysis.sentiment != 'string'")
                 b-col#sentiment(cols="6")
                     strong Positivity:
                     LoadingIcon(v-if="!done.sentiment")
-                    p(v-if="done.sentiment") {{ sentimentToText(analysis.sentiment) }} ({{ analysis.sentiment.score.toFixed(1) }})
+                    p(v-if="done.sentiment && typeof analysis.sentiment != 'string'") {{ sentimentToText(analysis.sentiment) }} ({{ analysis.sentiment.score.toFixed(1) }})
                 b-col#emotion(cols="6")
                     strong Emotion:
                     LoadingIcon(v-if="!done.sentiment")
-                    p(v-if="done.sentiment") {{ magnitudeToText(analysis.sentiment) }} ({{analysis.sentiment.magnitude.toFixed(1) }})
-            b-row
+                    p(v-if="done.sentiment && typeof analysis.sentiment != 'string'") {{ magnitudeToText(analysis.sentiment) }} ({{analysis.sentiment.magnitude.toFixed(1) }})
+            b-row(v-if="done.sentiment && typeof analysis.sentiment != 'string'")
                 b-col#sentiment_gauge(cols="6")
                     TweetGauge#details_sentiment_guage(v-if="done.sentiment" :percent="(analysis.sentiment.score + 1) * 50" w="200" :sections="sentiment_sections")
                 b-col#emotion_gauge(cols="6")
                     TweetGauge#details_emotion_guage(v-if="done.sentiment" :percent="(analysis.sentiment.magnitude) * 20" w="200" :sections="emotion_sections")
-            b-row
+            b-row(v-if="analysis.category instanceof Array")
                 b-col#category
                     strong Categories:
                     LoadingIcon(v-if="!done.category")
-                    p(v-if="done.category && !(analysis.category instanceof Array)") {{ analysis.category }}
-                    ul(v-if="analysis.category instanceof Array" v-for="(category, index) in analysis.category" :key="index")
+                    ul(v-if="done.category && analysis.category instanceof Array" v-for="(category, index) in analysis.category" :key="index")
                         li(v-if="done.category") {{ category.name }}
+            b-row(v-if="done.sentiment && done.category && typeof analysis.category == 'string'")
+                b-col#error
+                    font-awesome-icon(icon="exclamation-circle")
+                    |  {{  analysis.category }}
 </template>
 
 <script lang="ts">
