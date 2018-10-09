@@ -12,8 +12,8 @@
                  :selected="selected"
                  :done="detailDone")
     TweetList(:tweets="tweets"
-                v-if="done"
-                @show-tweet="show_tweet")
+              v-if="done"
+              @show-tweet="show_tweet")
 </template>
 
 <script lang="ts">
@@ -22,7 +22,7 @@ import LoadingIcon from '@/components/LoadingIcon.vue';
 import TweetDetails from '@/components/TweetDetails.vue';
 import TweetList from '@/components/TweetList.vue';
 import TweetSummary from '@/components/TweetSummary.vue';
-import {tsearch, analyse} from '@/api';
+import { tsearch, analyse } from '@/api';
 
 @Component({
   components: {
@@ -90,9 +90,9 @@ export default class Tweets extends Vue {
 
   analyseAllTweets(){
     let document = (this.tweets.map((text : any) => text.text)+" ");
-    analyse(Vue, document, "sentiment", this.generic_analysis, this.summaryDone);
-    analyse(Vue, document, "category", this.generic_analysis, this.summaryDone);
-    analyse(Vue, document, "entities", this.generic_analysis, this.summaryDone);
+    analyse(Vue, document, "sentiment", this.generic_analysis, this.summaryDone, this.tweets.length);
+    analyse(Vue, document, "category", this.generic_analysis, this.summaryDone, this.tweets.length);
+    analyse(Vue, document, "entities", this.generic_analysis, this.summaryDone, this.tweets.length);
   }
 
   textWithKeyword(text : any) {

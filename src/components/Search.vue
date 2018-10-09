@@ -9,12 +9,11 @@
           b-btn(size="sm" variant="success" @click="search" :disabled="query.length == 0")
             font-awesome-icon(icon="search")
     b-form-group(label="Search method")
-      b-form-radio-group(id="btnradios2"
-                      buttons
-                      button-variant="outline-dark"
-                      size="lg"
-                      v-model="search_method"
-                      name="method")
+      b-form-radio-group#btnradios2(buttons
+                                    button-variant="outline-dark"
+                                    size="lg"
+                                    v-model="search_method"
+                                    name="method")
         b-form-radio(value="message") Keyword
         b-form-radio(value="from") From user        
     hr.my-4
