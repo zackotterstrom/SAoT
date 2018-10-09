@@ -1,17 +1,18 @@
 <template lang="pug">
   .container
-    TweetSummary(:analysis="generic_analysis"
+    TweetSummary(v-if="tweets.length > 0"
+                 :analysis="generic_analysis"
                  :sentimentText="sentimentToText(generic_analysis.sentiment)"
                  :keyword="keyword(generic_analysis.entities).name"
                  :done="summaryDone")
-    b-jumbotron(v-if="!done")
+    b-jumbotron(v-if="!done ")
       LoadingIcon
     TweetDetails(:analysis="analysis"
-              :selected="selected"
-              :done="detailDone")
+                 :selected="selected"
+                 :done="detailDone")
     TweetList(:tweets="tweets"
-              v-if="done"
-              @show-tweet="show_tweet")
+                v-if="done"
+                @show-tweet="show_tweet")
 </template>
 
 <script lang="ts">
@@ -19,8 +20,8 @@ import { Component, Vue } from 'vue-property-decorator';
 import LoadingIcon from '@/components/LoadingIcon.vue';
 import TweetDetails from '@/components/TweetDetails.vue';
 import TweetList from '@/components/TweetList.vue';
-import TweetSummary from '@/components/TweetSummary.vue'
-import {tsearch, analyse, sentimentToText} from '@/api'
+import TweetSummary from '@/components/TweetSummary.vue';
+import {tsearch, analyse, sentimentToText} from '@/api';
 
 @Component({
   components: {
@@ -30,6 +31,7 @@ import {tsearch, analyse, sentimentToText} from '@/api'
     TweetDetails
   }
 })
+
 
 export default class Tweets extends Vue {
   // Array of tweets fetched from twitter containg text, user, mentions and hashtags.
@@ -60,16 +62,19 @@ export default class Tweets extends Vue {
   search(query : string) {
     tsearch(query).then((response : any) => {
       this.tweets = this.parse_tweets_json(response.data);
-      this.analyseAllTweets();
+      if (this.tweets.length == 0) {
+        this.done = true;
+        this.summaryDone.sentiment = true;
+        this.summaryDone.category = true;
+        this.summaryDone.entities = true;
+      } else {
+        this.analyseAllTweets();
+      }
     })
   }
 
   parse_tweets_json(json : any) {
     return json.statuses.map((e : any) => this.parse_tweet(e));
-  }
-
-  read_json(json : any){
-    return JSON.parse(json)
   }
 
   show_tweet(tweet : any) {
@@ -113,8 +118,19 @@ export default class Tweets extends Vue {
       tweet = tweet.retweeted_status;
     }
 
-    let hashtags = tweet.entities.hashtags.map((m : any) => m.text);
-    let mentions = tweet.entities.user_mentions.map((m : any) => m.name);
+    let media = {
+      photo: "",
+      video: ""
+    }
+    if (tweet.extended_entities) {
+      tweet.extended_entities.media.forEach((m : any) => {
+        if (m.type == "photo") {
+          media.photo = m.media_url;
+        } else if (m.type == "video") {
+          media.video = m.media_url;
+        };
+      })
+    };
 
     let indices : Array<number[]> = [];
     tweet.entities.hashtags.forEach((m : any) => indices.push(m.indices));
@@ -132,7 +148,23 @@ export default class Tweets extends Vue {
 
     this.done = true;
 
-    return Object({text: text, hashtags: hashtags, mentions: mentions, user: tweet.user.name + retweet_suffix});
+    return Object({
+      text: text,
+      entities: {
+        hashtags: tweet.entities.hashtags.map((m : any) => m.text),
+        mentions: tweet.entities.user_mentions.map((m : any) => Object({
+          name: m.name,
+          account: `https://twitter.com/${m.screen_name}`
+        })),
+        urls: tweet.entities.urls.map((m : any) => m.url),
+        media: media
+      },
+      user: {
+        name: tweet.user.name + retweet_suffix,
+        profile: "https://twitter.com/" + tweet.user.screen_name,
+        pic: tweet.user.profile_image_url
+      }
+    });
   }
 }
 </script>

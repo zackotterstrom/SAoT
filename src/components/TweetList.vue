@@ -1,11 +1,13 @@
 <template lang="pug">
     b-jumbotron
         b-list-group
-            b-list-group-item.pointer(v-for="(node, index) in tweets" :key="index" @click="show_tweet(node)").flex-column.align.items.start
-                .d-flex.w-100.justify-content-between
-                h5.mb-1 {{node['user']}}
-                small mentions: {{node.mentions.length}}
-                p.mb-1 {{node['text']}}
+            b-list-group-item.pointer.flex-column.align.items.start(v-if="tweets.length > 0" v-for="(node, index) in tweets" :key="index" @click="show_tweet(node)")
+                h5.mb-1 {{ node.user['name'] }}
+                small mentions: {{ node.entities.mentions.length }}
+                p.mb-1 {{ node['text'] }}
+        .text-xl-center(v-if="tweets.length == 0")
+            font-awesome-icon(icon="exclamation-circle")
+            p No one seems to be tweeting about this subject!
 </template>
 
 <script lang="ts">

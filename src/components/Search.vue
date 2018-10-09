@@ -6,7 +6,7 @@
         b-form-input(type="text" v-model="query")
         b-form-input(type="number" min="1" max="100" placeholder="Tweet count" v-model="count")
         b-input-group-append
-          b-btn(size="sm" variant="success" @click="search")
+          b-btn(size="sm" variant="success" @click="search" :disabled="query.length == 0")
             font-awesome-icon(icon="search")
     b-form-group(label="Search method")
       b-form-radio-group(id="btnradios2"
@@ -16,7 +16,7 @@
                       v-model="search_method"
                       name="method")
         b-form-radio(value="message") Keyword
-        b-form-radio(value="from") From user
+        b-form-radio(value="from") From user        
     hr.my-4
     router-link(variant="link" to="/search-advanced") Advanced search
     router-link.ml-3(variant="link" to="/tweetable") Tweetable?
