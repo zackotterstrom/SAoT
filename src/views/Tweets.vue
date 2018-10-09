@@ -3,6 +3,7 @@
     TweetSummary(v-if="tweets.length > 0"
                  :analysis="generic_analysis"
                  :sentimentText="sentimentToText(generic_analysis.sentiment)"
+                 :magnitudeText="magnitudeToText(generic_analysis.sentiment)"
                  :keyword="keyword(generic_analysis.entities).name"
                  :done="summaryDone")
     b-jumbotron(v-if="!done ")
@@ -21,7 +22,7 @@ import LoadingIcon from '@/components/LoadingIcon.vue';
 import TweetDetails from '@/components/TweetDetails.vue';
 import TweetList from '@/components/TweetList.vue';
 import TweetSummary from '@/components/TweetSummary.vue';
-import {tsearch, analyse, sentimentToText} from '@/api';
+import {tsearch, analyse} from '@/api';
 
 @Component({
   components: {
