@@ -4,6 +4,15 @@
         text-variant="dark"
     )
         h1(@click="goHome") SAoT
+        b-navbar#navs(toggleable="md"
+            type="dark"
+            variant="dark"
+        )
+            b-navbar-nav#navbar
+                b-nav-item(@click="goHome") Home
+                b-nav-item(@click="goAbout") About
+
+
 </template>
 
 <script lang="ts">
@@ -12,7 +21,11 @@ import { Component, Vue } from 'vue-property-decorator';
 @Component
 export default class Header extends Vue {
     goHome() {
-        this.$router.push("/");
+      this.$router.push("/");
+    };
+
+    goAbout() {
+      this.$router.push("/about");
     };
 };
 </script>
@@ -21,4 +34,15 @@ export default class Header extends Vue {
 #header h1
     cursor: pointer
     display: inline
+#header
+    display: flex
+    flex-direction: column
+    justify-content: center
+    align-items: center
+#navs
+    margin-top: 30px
+    border-radius: 10px
+    display: flex
+    justify-content: center
+    align-items: center
 </style>

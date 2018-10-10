@@ -1,17 +1,16 @@
 <template lang="pug">
   .container
-    Search
+    AboutInfo
 </template>
-
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import Search from '@/components/Search.vue';
+import AboutInfo from '@/components/AboutInfo.vue';
 
 @Component({
   components: {
-    Search
-  }
+    AboutInfo
+  },
 })
-export default class Home extends Vue { }
+export default class Home extends Vue {}
 </script>

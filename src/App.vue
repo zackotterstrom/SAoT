@@ -21,6 +21,7 @@ export default class Home extends Vue {}
 <style lang="sass">
   .wrapper, html
     background-color: #333
-  #link
+  .link
+    cursor: pointer
     color: #28a745
 </style>

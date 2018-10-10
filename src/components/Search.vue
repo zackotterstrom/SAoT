@@ -6,19 +6,18 @@
         b-form-input(type="text" v-model="query")
         b-form-input(type="number" min="1" max="100" placeholder="Tweet count" v-model="count")
         b-input-group-append
-          b-btn(size="sm" variant="success" @click="search")
+          b-btn(size="sm" variant="success" @click="search" :disabled="query.length == 0")
             font-awesome-icon(icon="search")
     b-form-group(label="Search method")
-      b-form-radio-group(id="btnradios2"
-                      buttons
-                      button-variant="outline-dark"
-                      size="lg"
-                      v-model="search_method"
-                      name="method")
+      b-form-radio-group#btnradios2(buttons
+                                    button-variant="outline-dark"
+                                    size="lg"
+                                    v-model="search_method"
+                                    name="method")
         b-form-radio(value="message") Keyword
-        b-form-radio(value="from") From user
+        b-form-radio(value="from") From user        
     hr.my-4
-    b-btn#link(variant="link") Advanced search
+    router-link(variant="link" to="/search-advanced") Advanced search
 </template>
 
 
