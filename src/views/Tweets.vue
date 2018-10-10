@@ -36,7 +36,7 @@ import { tsearch, analyse } from '@/api';
 
 export default class Tweets extends Vue {
   // Array of tweets fetched from twitter containg text, user, mentions and hashtags.
-  tweets : Array<Object> = [];
+  tweets : Array<any> = [];
 
   // Show tweets process state for different components
   done : boolean = false;
@@ -81,18 +81,18 @@ export default class Tweets extends Vue {
   show_tweet(tweet : any) {
     this.selected = tweet;
 
-    analyse(Vue, tweet.text, "sentiment", this.analysis, this.detailDone);
-    analyse(Vue, tweet.text, "category", this.analysis, this.detailDone);
-    analyse(Vue, tweet.text, "entities", this.analysis, this.detailDone);
+    analyse(Vue, tweet.text, "sentiment", this.analysis, this.detailDone, 1, tweet.lang);
+    analyse(Vue, tweet.text, "category", this.analysis, this.detailDone, 1, tweet.lang);
+    analyse(Vue, tweet.text, "entities", this.analysis, this.detailDone, 1, tweet.lang);
 
     this.$root.$emit('bv::show::modal','tweetModal');
   }
 
   analyseAllTweets(){
     let document = (this.tweets.map((text : any) => text.text)+" ");
-    analyse(Vue, document, "sentiment", this.generic_analysis, this.summaryDone, this.tweets.length);
-    analyse(Vue, document, "category", this.generic_analysis, this.summaryDone, this.tweets.length);
-    analyse(Vue, document, "entities", this.generic_analysis, this.summaryDone, this.tweets.length);
+    analyse(Vue, document, "sentiment", this.generic_analysis, this.summaryDone, this.tweets.length, this.tweets[0].lang);
+    analyse(Vue, document, "category", this.generic_analysis, this.summaryDone, this.tweets.length, this.tweets[0].lang);
+    analyse(Vue, document, "entities", this.generic_analysis, this.summaryDone, this.tweets.length, this.tweets[0].lang);
   }
 
   textWithKeyword(text : any) {
@@ -164,7 +164,8 @@ export default class Tweets extends Vue {
         name: tweet.user.name + retweet_suffix,
         profile: "https://twitter.com/" + tweet.user.screen_name,
         pic: tweet.user.profile_image_url
-      }
+      },
+      lang: tweet.lang
     });
   }
 }
