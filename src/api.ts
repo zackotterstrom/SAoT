@@ -63,15 +63,15 @@ export function magnitudeToText(value : any) {
   let txt = "";
   value = value.magnitude;
 
-  if (value > 7) {
+  if (value > 4) {
     txt = "Drama queen alert!";
-  } else if (value <= 7 && value > 5) {
+  } else if (value <= 4 && value > 3) {
     txt = "This is intense!";
-  } else if (value <= 5 && value > 3) {
-    txt = "This is quite emotional";
   } else if (value <= 3 && value > 2) {
+    txt = "This is quite emotional";
+  } else if (value <= 2 && value > 1.5) {
     txt = "This is slightly emotional.";
-  } else if (value <= 2 && value > 1) {
+  } else if (value <= 1.5 && value > 1) {
     txt = "This is quite stale.";
   } else if (value <= 1) {
     txt = "This is dull!";
