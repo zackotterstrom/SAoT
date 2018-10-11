@@ -7,7 +7,7 @@ import { faSearch, faExclamationCircle } from '@fortawesome/free-solid-svg-icons
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
-import {sentimentToText} from '@/api';
+import {magnitudeToText, sentimentToText} from '@/api';
 
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
@@ -35,6 +35,7 @@ Vue.prototype.emotion_sections = [
 
 // expose sentimenToText as a vue instance method
 Vue.prototype.sentimentToText = sentimentToText;
+Vue.prototype.magnitudeToText = magnitudeToText;
 
 new Vue({
   router,
