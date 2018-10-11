@@ -46,5 +46,5 @@ export default class Search extends Vue {
   #down
     margin-top: 40px
   p
-    text-align: leftg
+    text-align: left
 </style>
