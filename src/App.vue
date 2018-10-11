@@ -3,7 +3,9 @@
     Header
     #app
       router-view
-    
+    #spookydiv
+
+    Footer
 </template>
 
 <script lang="ts">
@@ -24,6 +26,10 @@ export default class Home extends Vue {}
 <style lang="sass">
   .wrapper, html
     background-color: #333
+
+  #spookydiv
+    min-height: 150px;
+
   .link
     cursor: pointer
     color: #28a745
