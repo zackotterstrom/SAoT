@@ -1,8 +1,9 @@
 <template lang="html">
     <footer>
-        <p>Posted by: Hege Refsnes</p>
-        <p>Contact information: <a href="mailto:someone@example.com">
-        someone@example.com</a>.</p>
+        <h6>Support:</h6>
+        
+        <p><a href="//www.notevendoommusic.com">
+        zackotterstrom@elev.ga.ntig.se</a></p>
     </footer>
 </template>
 
@@ -23,7 +24,11 @@ export default class Footer extends Vue {
         bottom: -100%;
         left: 0;
         padding: 1rem;
-        background-color: #efefef;
+        background-color: #222;
         text-align: center;
-        position-
+    footer h6
+        color: white
+        margin-top: 10px;
+    footer a 
+        color: cyan
 </style>
