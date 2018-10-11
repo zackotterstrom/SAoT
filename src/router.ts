@@ -26,6 +26,11 @@ export default new Router({
       path: '/search-advanced',
       name: 'search_advanced',
       component: () => import('./views/SearchAdvanced.vue')
+    },
+    {
+      path: '/tweetable',
+      name: 'tweetable',
+      component: () => import('./views/Tweetable.vue')
     }
   ]
 })
