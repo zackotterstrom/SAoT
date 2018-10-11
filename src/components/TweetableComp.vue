@@ -1,12 +1,15 @@
 <template lang="pug">
     b-jumbotron(bg-variant="light" text-variant="dark" header="Tweetable?")
         b-input-group
-            b-form-textarea(size="lg" rows="5" placeholder="paste your tweet in here..." v-model="tweet") 
+            b-form-textarea(size="lg" rows="5" placeholder="Paste your tweet in here..." v-model="tweet") 
             b-input-group
-             b-btn(@click="tweetquery()") check
-            
-            b-alert(show v-if="detailDone.sentiment") {{transSA(analysis.sentiment.score)}}
-            
+            br
+            b-btn(@click="tweetquery()") Check your Tweet!
+        #infobox  
+            TweetGauge(v-if="detailDone.sentiment && typeof analysis.sentiment != 'string'" :percent="(analysis.sentiment.score + 1) * 50" id="summary_sentiment_guage" :sections="sentiment_sections")
+            br
+            h3(show v-if="detailDone.sentiment") {{transSA(analysis.sentiment.score)}}
+
 </template>
 
 <script lang="ts">
@@ -17,17 +20,19 @@ import Search from '@/components/Search.vue'
 import Tweets from '@/views/Tweets.vue'
 import {analyse, sentimentToText} from '@/api'
 import { parse } from '@fortawesome/fontawesome-svg-core';
+import TweetGauge from '@/components/TweetGauge.vue';
 
 @Component({
     components: {
         LoadingIcon,
-        Tweets
+        Tweets,
+        TweetGauge
     }
 })
 
 
 export default class Tweetable extends Vue{
-    tweet : string = "this is a awesome tweet made by me and it is for testing yay"
+    tweet : string = ""
     analysis : any = { sentiment : {}, category : {}, entities : {} };
     detailDone : any = { sentiment : false, category : false, entities : false };
     store : string = "10000"
@@ -106,7 +111,7 @@ export default class Tweetable extends Vue{
                 text = "Those drugs really do wonders!"
             }
             else if(saInt <= 0.9){
-                text = "That's abit scary.. How can you be this positive"
+                text = "That's abit scary.. How can you be this positive?!"
             }
             else if(saInt <= 1){
                 text = "You are so happy that you broke the software"
@@ -121,6 +126,13 @@ export default class Tweetable extends Vue{
 </script>
 
 <style lang="sass">
-        
+    #infobox
+        width: 400px;
+        height: 100%;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    #infobox h3
+        text-align: center;
 </style>
 
